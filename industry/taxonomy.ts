@@ -1,139 +1,114 @@
-// 这个行业的分类体系：类别、标签词表、公司（主体）名录，以及防止张冠李戴的身份词典。
-// 模型按这里的词表打标签，主题页（topics.json）按标签归类，筛选栏按类别分组。
-// 换行业时：类别的 key 会出现在网址里（/all?category=…），上线后就不要再改；标签和名录可以随时增减。
-
 /**
- * 网页上的类别（筛选栏、卡片角标、RSS 分类订阅）。key 是网址和接口里的身份，上线后不要改。
- * section 是日报里的分节标题（几个类别可以共用一节，按这里的顺序排）；guide 告诉模型怎么归类。
- * 没归上类的资料在日报里放进第一个 key 为 industry 的类别所在的节（没有就放最后一节）。
+ * ChemHOT 行业分类、标签和主体词表。
+ * category key / topic slug 上线后不要随意修改。
  */
+
 export const CATEGORIES = [
-  { key: "ai-models", label: "模型", section: "模型发布/更新", guide: "新模型、模型版本、权重开放、模型能力与价格变化的发布与评测结果" },
-  { key: "ai-products", label: "产品", section: "产品发布/更新", guide: "AI 产品、功能、应用、工具、API 与平台的发布和更新" },
-  { key: "industry", label: "行业", section: "行业动态", guide: "公司经营、融资并购、人事、合作、诉讼、监管与政策、市场与基础设施" },
-  { key: "paper", label: "论文", section: "论文研究", guide: "研究论文、技术报告、基准与数据集" },
-  { key: "tip", label: "教程", section: "技巧与观点", guide: "教程、实践经验、使用技巧、提示词与工具用法、深度技术讲解" },
-  { key: "opinion", label: "观点", section: "技巧与观点", guide: "人物观点、评论、分析、访谈、现象与趋势讨论" },
+  { key: "spot-market", label: "现货", section: "现货与产业动态", guide: "化工品现货价格、企业报价、成交、装置、库存、开工、利润、进口、出口、物流和区域供需变化" },
+  { key: "futures-research", label: "期货研报", section: "期货与研究", guide: "期货公司和研究机构对能源化工品种的日报、周报、专题、策略、基差、月差、库存和供需研究" },
+  { key: "business-opportunity", label: "商机", section: "企业商机", guide: "真实采购、招标、求购、供应、扩产、投产、项目建设、原料需求、渠道与进出口商机" },
+  { key: "supply-demand", label: "供需", section: "供需与产业链", guide: "产能、装置检修与停车、复产、库存、开工率、产量、消费、利润和上下游供需变化" },
+  { key: "geo-macro", label: "地缘宏观", section: "地缘与宏观", guide: "战争、制裁、航运中断、OPEC、原油天然气、汇率、利率和宏观事件对能源化工成本与预期的影响" },
+  { key: "policy-exchange", label: "政策交易所", section: "政策与交易所", guide: "交易所规则、限仓与保证金、交割、仓单、政府产业政策、环保安全、进出口与监管政策" },
+  { key: "industry-analysis", label: "行业分析", section: "行业分析", guide: "产业机构、企业和研究者对化工产业链、价格驱动、竞争格局和中长期趋势的分析" },
 ] as const;
 
-/**
- * 内容理解一步给每篇资料判的“内容类型”（写在 prompts/content-understanding.md 里，改了类型要同步改那份提示词）。
- * 评分提示词（prompts/selection-score.md）按类型给五个维度不同的权重。
- */
-export const ITEM_TYPES = ["model_release", "product_launch", "tool_or_prompt", "research_paper", "industry_event", "opinion_analysis", "tutorial_explainer"] as const;
+export const ITEM_TYPES = [
+  "spot_market_update",
+  "futures_research",
+  "business_opportunity",
+  "supply_demand_event",
+  "geopolitical_macro",
+  "policy_exchange",
+  "industry_analysis",
+] as const;
 
-// ── 标签词表 ────────────────────────────────────────────────────────────────────────────
-
-/** 每篇资料的第一个标签必须是这些“分类标签”之一。 */
 export const CATEGORY_TAGS = [
-  "产品更新", "模型发布", "论文/研究", "开源/仓库", "教程/实践", "现象/趋势", "大佬观点", "评测/基准", "安全/对齐", "行业动态", "政策/监管",
-  "非AI/通用工具", "其他",
+  "现货行情",
+  "期货研报",
+  "商机供需",
+  "装置/产能",
+  "库存/开工",
+  "进出口/物流",
+  "地缘/宏观",
+  "政策/交易所",
+  "行业分析",
+  "其他",
 ] as const;
 
-/** 可选的主题标签。 */
 export const TOPIC_TAGS = [
-  "Agent", "编码", "推理", "多模态", "语音", "视频", "图像生成", "RAG", "端侧", "数据/训练", "搜索", "部署/工程", "开源生态", "具身智能", "MCP/工具调用",
+  "原油","燃料油","低硫燃料油","沥青","LPG","石脑油",
+  "纯苯","甲苯","PX","苯乙烯","PTA","乙二醇","聚酯",
+  "甲醇","PP","PE","PVC","烧碱","纯碱","玻璃","尿素",
+  "天然橡胶","合成橡胶","纸浆",
+  "基差","月差","库存","开工率","利润","装置检修","新增产能","进口","出口","航运"
 ] as const;
 
-/** 可选的实体标签（公司、机构、平台）。 */
-export const ENTITY_TAGS = ["OpenAI", "Anthropic", "DeepSeek", "DeepMind", "Google", "Meta", "Microsoft", "xAI", "Hugging Face", "GitHub", "arXiv"] as const;
+export const ENTITY_TAGS = [
+  "隆众资讯","卓创资讯","上海期货交易所","上海国际能源交易中心","大连商品交易所","郑州商品交易所","广州期货交易所",
+  "中国海关","国家统计局","国家发改委","EIA","OPEC","IEA"
+] as const;
 
-/** 模型常写的近义词，统一成词表里的写法。 */
 export const TAG_SYNONYMS: Readonly<Record<string, string>> = {
-  "教程/玩法": "教程/实践", "技巧/最佳实践": "教程/实践", "合作/生态": "行业动态", "融资/收购": "行业动态", "公司动态": "行业动态",
-  合作: "行业动态", 生态: "行业动态", 融资: "行业动态", 收购: "行业动态", 投资: "行业动态", 并购: "行业动态",
-  政策: "政策/监管", 监管: "政策/监管", 法规: "政策/监管", 安全: "安全/对齐", 对齐: "安全/对齐",
-  论文: "论文/研究", 研究: "论文/研究", paper: "论文/研究", papers: "论文/研究",
-  "open-source": "开源/仓库", 开源: "开源/仓库", 仓库: "开源/仓库", repo: "开源/仓库",
-  教程: "教程/实践", 玩法: "教程/实践", 指南: "教程/实践", 技巧: "教程/实践", 最佳实践: "教程/实践", 实践: "教程/实践",
-  产品: "产品更新", 更新: "产品更新", 发布: "模型发布", 模型: "模型发布", 趋势: "现象/趋势", 现象: "现象/趋势", 观点: "大佬观点",
-  视频生成: "视频", 非ai: "非AI/通用工具", "non-ai": "非AI/通用工具", 通用工具: "非AI/通用工具", 工程工具: "非AI/通用工具",
-  安全扫描: "非AI/通用工具", devops: "非AI/通用工具", 行业: "行业动态", 动态: "行业动态",
+  "现货": "现货行情", "报价": "现货行情", "价格": "现货行情",
+  "研报": "期货研报", "策略": "期货研报", "期货研究": "期货研报",
+  "求购": "商机供需", "采购": "商机供需", "招标": "商机供需", "供应": "商机供需",
+  "装置": "装置/产能", "检修": "装置/产能", "停车": "装置/产能", "复产": "装置/产能", "投产": "装置/产能",
+  "库存": "库存/开工", "开工": "库存/开工", "开工率": "库存/开工",
+  "进口": "进出口/物流", "出口": "进出口/物流", "物流": "进出口/物流", "运费": "进出口/物流",
+  "地缘": "地缘/宏观", "宏观": "地缘/宏观", "原油宏观": "地缘/宏观",
+  "政策": "政策/交易所", "交易所": "政策/交易所", "监管": "政策/交易所",
+  "分析": "行业分析", "专题": "行业分析",
+  "LLDPE": "PE", "聚乙烯": "PE", "聚丙烯": "PP", "聚氯乙烯": "PVC",
+  "MEG": "乙二醇", "EG": "乙二醇", "液化石油气": "LPG",
 };
 
-/** 模型漏了分类标签时，按内容类型补一个。 */
 export const CATEGORY_BY_ITEM_TYPE: Readonly<Record<string, string>> = {
-  model_release: "模型发布", product_launch: "产品更新", tool_or_prompt: "教程/实践", research_paper: "论文/研究",
-  industry_event: "行业动态", opinion_analysis: "大佬观点", tutorial_explainer: "教程/实践",
+  spot_market_update: "现货行情",
+  futures_research: "期货研报",
+  business_opportunity: "商机供需",
+  supply_demand_event: "装置/产能",
+  geopolitical_macro: "地缘/宏观",
+  policy_exchange: "政策/交易所",
+  industry_analysis: "行业分析",
 };
 
-// ── 公司与主体 ──────────────────────────────────────────────────────────────────────────
-
-/** 公司主题：id → 显示名、卡片上显示的标签（null 表示只用 entity:<id> 归类）、别名。 */
 export const ENTITIES: Record<string, { name: string; displayTag: string | null; aliases: string[] }> = {
-  openai: { name: "OpenAI", displayTag: "OpenAI", aliases: ["OpenAI", "ChatGPT", "Sora", "Codex", "GPT"] },
-  anthropic: { name: "Anthropic", displayTag: "Anthropic", aliases: ["Anthropic", "Claude"] },
-  google: { name: "Google", displayTag: "Google", aliases: ["Google", "DeepMind", "Gemini", "谷歌"] },
-  deepseek: { name: "DeepSeek", displayTag: "DeepSeek", aliases: ["DeepSeek", "深度求索"] },
-  qwen: { name: "千问 Qwen", displayTag: null, aliases: ["Qwen", "通义", "阿里"] },
-  kimi: { name: "Kimi / 月之暗面", displayTag: null, aliases: ["Kimi", "月之暗面", "Moonshot"] },
-  minimax: { name: "MiniMax", displayTag: null, aliases: ["MiniMax", "海螺"] },
-  zhipu: { name: "智谱 GLM", displayTag: null, aliases: ["智谱", "GLM", "Z.ai"] },
-  xai: { name: "xAI", displayTag: "xAI", aliases: ["xAI", "Grok"] },
-  meta: { name: "Meta", displayTag: "Meta", aliases: ["Meta", "Llama"] },
-  microsoft: { name: "Microsoft", displayTag: "Microsoft", aliases: ["Microsoft", "微软", "Copilot"] },
-  nvidia: { name: "NVIDIA", displayTag: null, aliases: ["NVIDIA", "英伟达"] },
-  "hugging-face": { name: "Hugging Face", displayTag: "Hugging Face", aliases: ["Hugging Face"] },
-  cursor: { name: "Cursor", displayTag: null, aliases: ["Cursor", "Anysphere"] },
-  openrouter: { name: "OpenRouter", displayTag: null, aliases: ["OpenRouter"] },
+  oilchem: { name: "隆众资讯", displayTag: "隆众资讯", aliases: ["隆众", "隆众资讯", "OilChem"] },
+  sci99: { name: "卓创资讯", displayTag: "卓创资讯", aliases: ["卓创", "卓创资讯", "SCI99", "chem99"] },
+  shfe: { name: "上海期货交易所", displayTag: "上海期货交易所", aliases: ["上期所", "上海期货交易所", "SHFE"] },
+  ine: { name: "上海国际能源交易中心", displayTag: "上海国际能源交易中心", aliases: ["上期能源", "能源中心", "INE"] },
+  dce: { name: "大连商品交易所", displayTag: "大连商品交易所", aliases: ["大商所", "大连商品交易所", "DCE"] },
+  czce: { name: "郑州商品交易所", displayTag: "郑州商品交易所", aliases: ["郑商所", "郑州商品交易所", "CZCE"] },
+  gfex: { name: "广州期货交易所", displayTag: "广州期货交易所", aliases: ["广期所", "广州期货交易所", "GFEX"] },
+  customs: { name: "中国海关", displayTag: "中国海关", aliases: ["海关总署", "中国海关"] },
+  stats: { name: "国家统计局", displayTag: "国家统计局", aliases: ["国家统计局"] },
+  ndrc: { name: "国家发展改革委", displayTag: "国家发改委", aliases: ["国家发展改革委", "国家发改委", "发改委"] },
+  eia: { name: "U.S. EIA", displayTag: "EIA", aliases: ["EIA", "U.S. Energy Information Administration", "美国能源信息署"] },
+  opec: { name: "OPEC", displayTag: "OPEC", aliases: ["OPEC", "欧佩克", "OPEC+"] },
+  iea: { name: "IEA", displayTag: "IEA", aliases: ["IEA", "International Energy Agency", "国际能源署"] },
 };
 
-/**
- * 身份词典：摘要和标题里出现的公司，必须在原文里也出现过，否则退回原标题、丢掉摘要（防止模型张冠李戴）。
- * 行业没有这个问题时可以留空数组。
- */
 export const IDENTITY_LEXICON: ReadonlyArray<{ id: string; name: string; patterns: RegExp[] }> = [
-  { id: "openai", name: "OpenAI", patterns: [/openai|chatgpt|\bgpt-?[o\d]|\bsora\b|\bcodex\b/i] },
-  { id: "anthropic", name: "Anthropic", patterns: [/anthropic|\bclaude\b/i, /\b(?:opus|sonnet|haiku)\s*\d+(?:[.\-]\d+)*\b/i, /\bfable\s*\d+(?:[.\-]\d+)*\b|\bmythos\b/i] },
-  { id: "google", name: "Google / Gemini", patterns: [/google|deepmind|\bgemini\b|notebooklm|\bveo\s?\d|\bAlphaFold\b|\bAMIE\b/i] },
-  { id: "deepseek", name: "DeepSeek", patterns: [/deepseek|深度求索/i] },
-  { id: "xai", name: "xAI / Grok", patterns: [/\bxai\b|\bgrok\b/i] },
-  { id: "meta", name: "Meta / Llama", patterns: [/\bMeta\b/, /\bmeta\s?ai\b|\bllama\b/i] },
-  { id: "microsoft", name: "Microsoft / Copilot", patterns: [/microsoft|copilot|微软/i] },
-  { id: "nvidia", name: "NVIDIA", patterns: [/nvidia|英伟达|\bnemotron\b|\bnemo\b|\bblackwell\b|\brubin(?:\s+ultra)?\b|\bcuda\b/i] },
-  { id: "qwen", name: "千问 Qwen", patterns: [/\bqwen|通义|千问/i] },
-  { id: "hugging-face", name: "Hugging Face", patterns: [/hugging\s?face/i] },
-  { id: "cursor", name: "Cursor", patterns: [/\bCursor\b/] },
-  { id: "kimi", name: "Kimi / 月之暗面", patterns: [/\bkimi\b|月之暗面|\bmoonshot\s?ai\b/i] },
-  { id: "openrouter", name: "OpenRouter", patterns: [/openrouter/i] },
-  { id: "minimax", name: "MiniMax", patterns: [/minimax/i] },
-  { id: "zhipu", name: "智谱 GLM", patterns: [/智谱|\bglm-?[4-9]/i] },
-  { id: "hunyuan", name: "腾讯混元", patterns: [/混元|hunyuan/i] },
-  { id: "doubao", name: "字节豆包", patterns: [/豆包|doubao|字节跳动|bytedance/i] },
-  { id: "mistral", name: "Mistral", patterns: [/mistral/i] },
-  { id: "perplexity", name: "Perplexity", patterns: [/\bPerplexity\b/] },
-  { id: "runway", name: "Runway", patterns: [/\brunway\b/i] },
-  { id: "suno", name: "Suno", patterns: [/\bsuno\b/i] },
-  { id: "midjourney", name: "Midjourney", patterns: [/midjourney/i] },
-  { id: "stability-ai", name: "Stability AI", patterns: [/stability\s?ai/i] },
-  { id: "elevenlabs", name: "ElevenLabs", patterns: [/eleven\s?labs/i] },
-  { id: "vllm", name: "vLLM", patterns: [/\bvllm\b/i] },
-  { id: "ollama", name: "Ollama", patterns: [/\bollama\b/i] },
-  { id: "windsurf", name: "Windsurf", patterns: [/windsurf/i] },
-  { id: "devin", name: "Devin", patterns: [/\bdevin\b/i] },
-  { id: "manus", name: "Manus", patterns: [/\bmanus\b/i] },
-  { id: "apple", name: "Apple AI", patterns: [/\bapple\s?(intelligence|silicon|ai)\b|苹果(智能|\s?AI)/i] },
-  { id: "amazon", name: "Amazon / AWS", patterns: [/amazon|\baws\b|亚马逊/i] },
-  { id: "baidu", name: "百度文心", patterns: [/百度|baidu|文心|\bernie\s?bot\b/i] },
+  { id: "oilchem", name: "隆众资讯", patterns: [/隆众资讯|隆众|oilchem/i] },
+  { id: "sci99", name: "卓创资讯", patterns: [/卓创资讯|卓创|sci99|chem99/i] },
+  { id: "shfe", name: "上海期货交易所", patterns: [/上海期货交易所|上期所|\bSHFE\b/i] },
+  { id: "ine", name: "上海国际能源交易中心", patterns: [/上海国际能源交易中心|能源中心|上期能源|\bINE\b/i] },
+  { id: "dce", name: "大连商品交易所", patterns: [/大连商品交易所|大商所|\bDCE\b/i] },
+  { id: "czce", name: "郑州商品交易所", patterns: [/郑州商品交易所|郑商所|\bCZCE\b/i] },
+  { id: "gfex", name: "广州期货交易所", patterns: [/广州期货交易所|广期所|\bGFEX\b/i] },
+  { id: "eia", name: "EIA", patterns: [/\bEIA\b|Energy Information Administration|美国能源信息署/i] },
+  { id: "opec", name: "OPEC", patterns: [/\bOPEC\+?\b|欧佩克/i] },
+  { id: "iea", name: "IEA", patterns: [/\bIEA\b|International Energy Agency|国际能源署/i] },
 ];
 
-/** 这些域名上的文章，发布方就是对应的公司（托管平台如 GitHub、arXiv 不算）。 */
 export const PUBLISHER_DOMAINS: ReadonlyArray<{ entityId: string; domains: readonly string[] }> = [
-  { entityId: "openai", domains: ["openai.com"] },
-  { entityId: "anthropic", domains: ["anthropic.com", "claude.com"] },
-  { entityId: "google", domains: ["deepmind.google", "ai.google", "blog.google"] },
-  { entityId: "deepseek", domains: ["deepseek.com"] },
-  { entityId: "xai", domains: ["x.ai"] },
-  { entityId: "meta", domains: ["ai.meta.com"] },
-  { entityId: "microsoft", domains: ["microsoft.com"] },
-  { entityId: "nvidia", domains: ["nvidia.com"] },
-  { entityId: "qwen", domains: ["qwen.ai"] },
-  { entityId: "cursor", domains: ["cursor.com"] },
-  { entityId: "openrouter", domains: ["openrouter.ai"] },
+  { entityId: "oilchem", domains: ["oilchem.net"] },
+  { entityId: "sci99", domains: ["sci99.com", "chem99.com"] },
+  { entityId: "shfe", domains: ["shfe.com.cn", "shfe.cn"] },
+  { entityId: "eia", domains: ["eia.gov"] },
+  { entityId: "opec", domains: ["opec.org"] },
+  { entityId: "iea", domains: ["iea.org"] },
 ];
 
-/** 原文里的这些写法也算提到了对应公司。 */
-export const IDENTITY_CONTEXT_ALIASES: ReadonlyArray<{ entityId: string; pattern: RegExp }> = [
-  { entityId: "meta", pattern: /@AIatMeta\b/i },
-  { entityId: "zhipu", pattern: /\bZhipu(?:\s+AI\b|['’]s\b)/i },
-];
+export const IDENTITY_CONTEXT_ALIASES: ReadonlyArray<{ entityId: string; pattern: RegExp }> = [];
