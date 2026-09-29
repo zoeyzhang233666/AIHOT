@@ -87,6 +87,7 @@ export interface TimelineCard {
   anchorAt: string;
   item: FeedItemSummary;
   group: GroupInfo | null;
+  market: ChemicalMarketMetadata | null;
 }
 
 export interface HotStripEntry {
@@ -133,6 +134,42 @@ export interface OutlineEntry {
   id: string;
   text: string;
   level: number;
+}
+
+export interface ChemicalProductRef {
+  name: string;
+  aliases: string[];
+  cas: string | null;
+  family: string | null;
+  grade: string | null;
+  purity: string | null;
+  specification: string | null;
+  brand: string | null;
+}
+
+export interface BusinessOpportunityView {
+  kind: "purchase" | "wanted" | "supply" | "tender" | "project" | "capacity_expansion" | "new_production" | "distributor" | "import" | "export" | "other";
+  company: string | null;
+  companyRole: "buyer" | "seller" | "project_owner" | "trader" | "unknown";
+  productName: string | null;
+  cas: string | null;
+  grade: string | null;
+  purity: string | null;
+  specification: string | null;
+  package: string | null;
+  quantity: string | null;
+  frequency: string | null;
+  province: string | null;
+  city: string | null;
+  region: string | null;
+  deliveryLocation: string | null;
+  deadline: string | null;
+  evidence: string | null;
+}
+
+export interface ChemicalMarketMetadata {
+  products: ChemicalProductRef[];
+  businessOpportunity: BusinessOpportunityView | null;
 }
 
 export interface ItemDetail extends ItemSummary {

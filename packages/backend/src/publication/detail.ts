@@ -15,6 +15,7 @@ interface DetailRow extends ItemRow {
   body_status: string;
   tr_html: string | null;
   tr_complete: boolean | null;
+  analysis_output: Record<string, any> | null;
 }
 
 export type DetailResult =
@@ -37,7 +38,8 @@ function withOutline(html: string): { html: string; outline: OutlineEntry[] } {
 
 async function loadRow(id: string): Promise<DetailRow | null> {
   const [row] = await sql<DetailRow[]>`
-    SELECT ${ITEM_COLUMNS}, a.body_html, a.body_text, a.body_status, tr.body_html AS tr_html, tr.complete AS tr_complete
+    SELECT ${ITEM_COLUMNS}, a.body_html, a.body_text, a.body_status, tr.body_html AS tr_html, tr.complete AS tr_complete,
+      (SELECT an.output FROM analyses an WHERE an.id = p.analysis_id) AS analysis_output
     ${ITEM_FROM}
     WHERE p.article_id = ${id}`;
   return row ?? null;
@@ -47,6 +49,16 @@ async function loadRow(id: string): Promise<DetailRow | null> {
  * Public detail (rules.hasItemPage): items the lists leave out (low relevance, merged duplicates, no
  * Chinese summary yet) keep a noindex page; withdrawn and hot_signal items are a 404.
  */
+function marketMetadata(output: Record<string, any> | null): ItemDetail["market"] {
+  if (!output) return null;
+  const products = Array.isArray(output.products) ? output.products : [];
+  const businessOpportunity = output.businessOpportunity && typeof output.businessOpportunity === "object"
+    ? output.businessOpportunity
+    : null;
+  if (products.length === 0 && !businessOpportunity) return null;
+  return { products, businessOpportunity };
+}
+
 export async function loadItemDetail(id: string, now = new Date()): Promise<DetailResult> {
   const row = await loadRow(id);
   if (!row || !hasItemPage({ visibility: row.visibility, sourceMode: row.source_mode })) return { kind: "not_found" };
@@ -68,6 +80,7 @@ export async function loadItemDetail(id: string, now = new Date()): Promise<Deta
       indexable: false,
       markdownAvailable: false,
       group: null,
+      market: marketMetadata(row.analysis_output),
     };
     return { kind: "found", detail, row };
   }
@@ -136,6 +149,7 @@ export async function loadItemDetail(id: string, now = new Date()): Promise<Deta
     indexable: row.indexable,
     markdownAvailable: markdownAvailable(row),
     group,
+    market: marketMetadata(row.analysis_output),
   };
   return { kind: "found", detail, row };
 }

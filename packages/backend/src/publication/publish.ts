@@ -40,6 +40,7 @@ interface AnalysisRow {
   reason_zh: string | null;
   score: number | null;
   selected: boolean | null;
+  output: Record<string, any> | null;
 }
 
 interface OverrideRow {
@@ -156,7 +157,7 @@ export async function publishArticleTx(tx: Tx, articleId: string, options: Publi
     SELECT id, name, kind, tier, participation_mode, first_party, site_fulltext, syndicate_fulltext FROM sources WHERE id = ${article.source_id}`;
   if (!source) return null;
   const [analysis] = await tx<AnalysisRow[]>`
-    SELECT id, relevance, category, tags, subjects, title_zh, summary_zh, reason_zh, score, selected
+    SELECT id, relevance, category, tags, subjects, title_zh, summary_zh, reason_zh, score, selected, output
     FROM analyses WHERE article_id = ${articleId} ORDER BY input_revision DESC, id DESC LIMIT 1`;
   const [override] = await tx<OverrideRow[]>`SELECT fields, visibility FROM editorial_overrides WHERE article_id = ${articleId}`;
   const [membership] = await tx<{ fact_id: number; story_id: number | null }[]>`
@@ -214,8 +215,21 @@ export async function publishArticleTx(tx: Tx, articleId: string, options: Publi
   const indexable = isIndexable({
     visibility, hasSummary: !!summary, selected, seoIndexedAt: previous?.seo_indexed_at ?? null, seoExcludedAt: previous?.seo_excluded_at ?? null,
   });
+  const products = Array.isArray(analysis?.output?.products) ? analysis!.output!.products : [];
+  const opportunity = analysis?.output?.businessOpportunity && typeof analysis.output.businessOpportunity === "object"
+    ? analysis.output.businessOpportunity
+    : null;
+  const productTerms = products.flatMap((p: Record<string, any>) => [
+    p.name, ...(Array.isArray(p.aliases) ? p.aliases : []), p.cas, p.family, p.grade, p.purity, p.specification, p.brand,
+  ]);
+  const opportunityTerms = opportunity ? [
+    opportunity.company, opportunity.productName, opportunity.cas, opportunity.grade, opportunity.purity,
+    opportunity.specification, opportunity.package, opportunity.quantity, opportunity.frequency,
+    opportunity.province, opportunity.city, opportunity.region, opportunity.deliveryLocation, opportunity.deadline,
+  ] : [];
   const searchText = collapseWhitespace(
-    [title, originalTitle, summary, source.name, ...displayTags(tags), ...(analysis?.subjects ?? [])].filter(Boolean).join(" "),
+    [title, originalTitle, summary, source.name, ...displayTags(tags), ...(analysis?.subjects ?? []), ...productTerms, ...opportunityTerms]
+      .filter(Boolean).join(" "),
   ).toLowerCase();
 
   // A selected item sits at its reading group's anchor: the earliest public pool member of its fact.

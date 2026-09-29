@@ -47,7 +47,14 @@ const provider = await stub((_hit, req) => {
     if (marker === "SENSITIVE") return new Reply(400, { contentFilter: [{ level: 1, role: "user" }], error: { code: "1301", message: "系统检测到输入或生成内容可能包含不安全或敏感内容" } });
     return answer({ itemType: "supply_demand_event", authorRole: "principal", tags: ["装置/产能", "甲醇", "不存在的标签"], editorialJudgment: `理由 ${marker}`, titleZh: `理解标题 ${marker}`, summaryZh: `理解摘要 ${marker}。第二句补充一个关键数字。` });
   }
-  if (step === "structure") return answer({ category: "supply-demand", tags: ["装置/产能", "甲醇"], subjects: ["oilchem", "unknown-co"], fact: { title: `事实 ${marker}`, subject: "某企业", action: "停车", object: "甲醇装置", occurredAt: null } });
+  if (step === "structure") return answer({
+    category: "supply-demand",
+    tags: ["装置/产能", "甲醇"],
+    subjects: ["oilchem", "unknown-co"],
+    products: [{ name: "NMP", aliases: ["N-甲基吡咯烷酮"], cas: "872-50-4", family: "电子化学品", grade: "电子级", purity: "≥99.9%", specification: null, brand: null }],
+    businessOpportunity: { kind: "purchase", company: "某电子材料企业", companyRole: "buyer", productName: "NMP", cas: "872-50-4", grade: "电子级", purity: "≥99.9%", specification: null, package: null, quantity: "80 吨/月", frequency: "每月", province: "江苏", city: null, region: "华东", deliveryLocation: null, deadline: null, evidence: "企业明确采购电子级 NMP，月需求 80 吨。" },
+    fact: { title: `事实 ${marker}`, subject: "某企业", action: "停车", object: "甲醇装置", occurredAt: null }
+  });
   return answer(`title_zh: 翻译标题 ${marker}\nsummary_zh: 翻译摘要 ${marker}。第二句补充影响。`);
 });
 for (const env of ["DASHSCOPE_BASE_URL", "ZHIPU_BASE_URL", "DEEPSEEK_BASE_URL"]) process.env[env] = `${provider.url}/v1`;
@@ -102,6 +109,8 @@ test("a selected item: prefilter, two scores, the content understanding and the 
   assert.deepEqual(r.tags, ["装置/产能", "甲醇", "隆众资讯"], "vocabulary tags (synonyms mapped, unknown dropped) and the subject's tag");
   assert.deepEqual(r.subjects, ["oilchem"]);
   assert.deepEqual([r.output.writer, r.output.itemType, r.output.prefilter.label, r.output.fact.title], ["understand", "supply_demand_event", "PASS", "事实 CLEAR"]);
+  assert.deepEqual(r.output.products[0], { name: "NMP", aliases: ["N-甲基吡咯烷酮"], cas: "872-50-4", family: "电子化学品", grade: "电子级", purity: "≥99.9%", specification: null, brand: null });
+  assert.deepEqual([r.output.businessOpportunity.kind, r.output.businessOpportunity.quantity, r.output.businessOpportunity.province], ["purchase", "80 吨/月", "江苏"]);
   const score = requests.find((q) => q.marker === "CLEAR" && q.step === "score")!;
   assert.match(score.user, /【标题】\nCLEAR model release/, "the score reads the original title, before any writing");
   assert.deepEqual([score.body.temperature, score.body.reasoning_effort, score.body.max_tokens], [1, "high", 65536]);
