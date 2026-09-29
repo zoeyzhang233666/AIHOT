@@ -87,7 +87,6 @@ export interface TimelineCard {
   anchorAt: string;
   item: FeedItemSummary;
   group: GroupInfo | null;
-  market: ChemicalMarketMetadata | null;
 }
 
 export interface HotStripEntry {
@@ -183,6 +182,8 @@ export interface ItemDetail extends ItemSummary {
   indexable: boolean;
   markdownAvailable: boolean;
   group: GroupInfo | null;
+  /** Dynamic chemical-product/CAS extraction and structured business-opportunity fields. */
+  market: ChemicalMarketMetadata | null;
 }
 
 export interface GroupReport {

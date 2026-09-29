@@ -357,6 +357,235 @@
         "business-opportunities",
         "supply-demand"
       ]
+    },
+    {
+      "slug": "fine-chemicals",
+      "name": "精细化工",
+      "group": "field",
+      "tags": [
+        "精细化工"
+      ],
+      "definition": "精细化工长尾产品的采购、供应、项目、价格与企业动态，具体产品通过名称和CAS动态识别。",
+      "related": [
+        "business-opportunities",
+        "electronic-chemicals",
+        "functional-additives"
+      ]
+    },
+    {
+      "slug": "electronic-chemicals",
+      "name": "电子化学品",
+      "group": "field",
+      "tags": [
+        "电子化学品"
+      ],
+      "definition": "电子级溶剂、湿电子化学品、光刻/显示/半导体相关化学材料的商机与产业动态。",
+      "related": [
+        "fine-chemicals",
+        "new-energy-materials",
+        "solvents"
+      ]
+    },
+    {
+      "slug": "pharma-intermediates",
+      "name": "医药原料/中间体",
+      "group": "field",
+      "tags": [
+        "医药原料/中间体"
+      ],
+      "definition": "医药原料、中间体和相关精细化学品的采购、供应、项目与企业动态。",
+      "related": [
+        "fine-chemicals",
+        "business-opportunities"
+      ]
+    },
+    {
+      "slug": "agrochemical-intermediates",
+      "name": "农药原料/中间体",
+      "group": "field",
+      "tags": [
+        "农药原料/中间体"
+      ],
+      "definition": "农药原料、中间体及相关精细化学品的供需、项目和采购销售商机。",
+      "related": [
+        "fine-chemicals",
+        "business-opportunities"
+      ]
+    },
+    {
+      "slug": "coatings-inks",
+      "name": "涂料/油墨原料",
+      "group": "field",
+      "tags": [
+        "涂料/油墨原料"
+      ],
+      "definition": "树脂、溶剂、颜填料、助剂等涂料和油墨原料的商机与市场动态。",
+      "related": [
+        "solvents",
+        "dyes-pigments",
+        "functional-additives"
+      ]
+    },
+    {
+      "slug": "adhesives-sealants",
+      "name": "胶黏剂/密封材料",
+      "group": "field",
+      "tags": [
+        "胶黏剂/密封材料"
+      ],
+      "definition": "聚氨酯、环氧、丙烯酸等胶黏剂和密封材料原料的供需与商机。",
+      "related": [
+        "fine-chemicals",
+        "functional-additives",
+        "business-opportunities"
+      ]
+    },
+    {
+      "slug": "rubber-plastic-additives",
+      "name": "橡塑助剂",
+      "group": "field",
+      "tags": [
+        "橡塑助剂"
+      ],
+      "definition": "抗氧剂、促进剂、增塑剂、稳定剂、偶联剂等橡塑助剂的采购供应和产业动态。",
+      "related": [
+        "polyolefins",
+        "pvc",
+        "fine-chemicals"
+      ]
+    },
+    {
+      "slug": "surfactants",
+      "name": "表面活性剂",
+      "group": "field",
+      "tags": [
+        "表面活性剂"
+      ],
+      "definition": "阴离子、阳离子、非离子及特种表面活性剂的供需与商机。",
+      "related": [
+        "personal-care-chemicals",
+        "fine-chemicals"
+      ]
+    },
+    {
+      "slug": "catalysts",
+      "name": "催化剂/助催化剂",
+      "group": "field",
+      "tags": [
+        "催化剂/助催化剂"
+      ],
+      "definition": "化工催化剂、助催化剂及催化材料的采购、供应、项目和产能动态。",
+      "related": [
+        "fine-chemicals",
+        "business-opportunities"
+      ]
+    },
+    {
+      "slug": "dyes-pigments",
+      "name": "染料/颜料",
+      "group": "field",
+      "tags": [
+        "染料/颜料"
+      ],
+      "definition": "染料、颜料及其中间体的价格、供需和企业商机。",
+      "related": [
+        "coatings-inks",
+        "fine-chemicals"
+      ]
+    },
+    {
+      "slug": "water-treatment",
+      "name": "水处理化学品",
+      "group": "field",
+      "tags": [
+        "水处理化学品"
+      ],
+      "definition": "絮凝剂、阻垢剂、杀菌剂、膜处理等水处理化学品的商机与市场动态。",
+      "related": [
+        "fine-chemicals",
+        "business-opportunities"
+      ]
+    },
+    {
+      "slug": "personal-care-chemicals",
+      "name": "日化原料",
+      "group": "field",
+      "tags": [
+        "日化原料"
+      ],
+      "definition": "个护、清洁、化妆品相关化工原料及功能助剂的采购供应信息。",
+      "related": [
+        "surfactants",
+        "functional-additives"
+      ]
+    },
+    {
+      "slug": "food-feed-additives",
+      "name": "食品/饲料添加剂",
+      "group": "field",
+      "tags": [
+        "食品/饲料添加剂"
+      ],
+      "definition": "食品与饲料添加剂、营养强化及相关化工原料的商机和产业动态。",
+      "related": [
+        "fine-chemicals",
+        "business-opportunities"
+      ]
+    },
+    {
+      "slug": "solvents",
+      "name": "溶剂",
+      "group": "field",
+      "tags": [
+        "溶剂"
+      ],
+      "definition": "NMP、PMA、DPM、DPMA、DBE、MEK等溶剂及特种溶剂的供需、价格和商机。",
+      "related": [
+        "electronic-chemicals",
+        "coatings-inks",
+        "fine-chemicals"
+      ]
+    },
+    {
+      "slug": "functional-additives",
+      "name": "功能助剂",
+      "group": "field",
+      "tags": [
+        "功能助剂"
+      ],
+      "definition": "光引发剂、紫外吸收剂、抗氧剂、偶联剂等功能助剂的供需和商机。",
+      "related": [
+        "rubber-plastic-additives",
+        "coatings-inks",
+        "fine-chemicals"
+      ]
+    },
+    {
+      "slug": "new-energy-materials",
+      "name": "新能源材料",
+      "group": "field",
+      "tags": [
+        "新能源材料"
+      ],
+      "definition": "锂电、光伏及其他新能源产业链相关化学材料的项目、采购、供应和价格动态。",
+      "related": [
+        "electronic-chemicals",
+        "business-opportunities",
+        "fine-chemicals"
+      ]
+    },
+    {
+      "slug": "other-new-materials",
+      "name": "其他新材料",
+      "group": "field",
+      "tags": [
+        "其他新材料"
+      ],
+      "definition": "未归入上述类别的功能材料、高性能材料及其化学原料商机。",
+      "related": [
+        "fine-chemicals",
+        "business-opportunities"
+      ]
     }
   ]
 }
