@@ -27,6 +27,7 @@ import {
 } from "./writing.ts";
 import { CATEGORY_BY_ITEM_TYPE, CATEGORY_GUIDE, CATEGORY_TAGS, ENTITIES, ENTITY_TAGS, ITEM_TYPES, normalizeTags, TOPIC_TAGS } from "./vocabulary.ts";
 import { promptText, promptVersion } from "./prompts.ts";
+import { chainTagsFor } from "@aihot/industry/chains";
 
 export { buildMaterial, loadAnalyzeInput, type AnalyzeInputArticle };
 
@@ -155,6 +156,8 @@ const StructureSchema = z.object({
   category: z.enum(CATEGORY_KEYS).nullable().catch(null),
   tags: z.array(z.string()).max(12).catch([]),
   subjects: z.array(z.string()).max(6).catch([]),
+  sourcePaths: z.array(z.string().trim().min(1).max(40)).max(4).catch([]),
+  applications: z.array(z.string().trim().min(1).max(40)).max(4).catch([]),
   products: z.array(ProductSchema).max(12).catch([]),
   businessOpportunity: BusinessOpportunitySchema,
   fact: FactSchema,
@@ -210,6 +213,8 @@ export interface AnalysisRun {
     category: string | null;
     tags: string[];
     subjects: string[];
+    sourcePaths: string[];
+    applications: string[];
     products: z.infer<typeof ProductSchema>[];
     businessOpportunity: z.infer<typeof BusinessOpportunitySchema>;
     fact: z.infer<typeof FactSchema>;
@@ -296,7 +301,7 @@ async function runStructure(a: AnalyzeInputArticle, opts: StepOpts): Promise<Non
     user: buildMaterial(a),
     schema: StructureSchema,
     temperature: 0.2,
-    maxTokens: 800,
+    maxTokens: 1200,
     attemptTag: tagged(opts.attemptTag, "structure"),
   });
   const subjects = [...new Set(res.data.subjects.map((s) => s.trim().toLowerCase()).filter((s) => s in ENTITIES))];
@@ -305,6 +310,8 @@ async function runStructure(a: AnalyzeInputArticle, opts: StepOpts): Promise<Non
     category: res.data.category,
     tags: normalizeTags(res.data.tags),
     subjects,
+    sourcePaths: res.data.sourcePaths,
+    applications: res.data.applications,
     products: res.data.products,
     businessOpportunity: res.data.businessOpportunity,
     fact: res.data.fact,
@@ -438,6 +445,12 @@ export function normalizeAnalysis(run: AnalysisRun) {
     const display = ENTITIES[s]?.displayTag;
     if (display && !tags.includes(display)) tags.push(display);
   }
+  const sourcePaths = run.structure?.sourcePaths ?? [];
+  const applications = run.structure?.applications ?? [];
+  for (const t of [...chainTagsFor("source", sourcePaths), ...chainTagsFor("application", applications)]) {
+    if (!tags.includes(t)) tags.push(t);
+  }
+  if (run.structure?.businessOpportunity && !tags.includes("商机")) tags.push("商机");
   return {
     relevance,
     selected,
@@ -452,6 +465,8 @@ export function normalizeAnalysis(run: AnalysisRun) {
     titleZh,
     summaryZh,
     reasonZh: run.writing?.reasonZh ?? null,
+    sourcePaths,
+    applications,
     products: run.structure?.products ?? [],
     businessOpportunity: run.structure?.businessOpportunity ?? null,
     fact: run.structure?.fact ?? null,
@@ -490,6 +505,8 @@ export async function analyzeArticle(articleId: string, opts: StepOpts = {}): Pr
     ...(w?.identityGuard?.outcome === "fallback" ? { identityGuard: w.identityGuard } : {}),
     products: out.products,
     businessOpportunity: out.businessOpportunity,
+    sourcePaths: out.sourcePaths,
+    applications: out.applications,
     fact: out.fact,
   };
   const committed = await sql.begin(async (tx) => {

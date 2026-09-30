@@ -14,10 +14,10 @@
 - 不输出理由、分类或精选结论，只输出分数。
 
 ## 内容类型
+- business_opportunity：采购、求购、招标、供应、项目和进出口商机（本站最优先）
 - spot_market_update：现货、价格、基差、库存、开工等市场更新
-- futures_research：期货公司/研究机构研报、策略与期现研究
-- business_opportunity：采购、求购、招标、供应、项目和进出口商机，尤其包括精细化工长尾产品商机
 - supply_demand_event：装置、产能、库存、产量、需求、利润等供需事件
+- futures_research：期货公司/研究机构研报、策略与期现研究
 - geopolitical_macro：地缘、制裁、OPEC、航运、原油天然气和宏观事件
 - policy_exchange：交易所规则、交割、保证金、限仓和产业/贸易/环保政策
 - industry_analysis：产业链和中长期行业分析
@@ -32,10 +32,10 @@
 ## 类型权重
 | 类型 | sig | nov | cred | reson | act |
 |---|---:|---:|---:|---:|---:|
-| spot_market_update | 2 | 2 | 2 | 1 | 3 |
-| futures_research | 2 | 2 | 2 | 2 | 2 |
 | business_opportunity | 2 | 2 | 3 | 0 | 3 |
+| spot_market_update | 2 | 2 | 2 | 1 | 3 |
 | supply_demand_event | 4 | 2 | 2 | 1 | 1 |
+| futures_research | 2 | 2 | 2 | 2 | 2 |
 | geopolitical_macro | 4 | 1 | 2 | 3 | 0 |
 | policy_exchange | 4 | 2 | 2 | 1 | 1 |
 | industry_analysis | 2 | 3 | 2 | 2 | 1 |

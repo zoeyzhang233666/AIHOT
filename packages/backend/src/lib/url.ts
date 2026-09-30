@@ -161,19 +161,28 @@ function blockedHostname(host: string): boolean {
   return host === "localhost" || host.endsWith(".localhost") || host.endsWith(".internal") || host === "metadata.google.internal";
 }
 
+/** Compose-internal hostnames (e.g. rsshub) that may resolve to private addresses. */
+function allowedInternalHost(host: string): boolean {
+  const raw = process.env.INTERNAL_FETCH_HOSTS ?? "";
+  if (!raw) return false;
+  return raw.split(",").some((h) => h.trim().toLowerCase() === host);
+}
+
 /**
  * Rejects URLs that name or resolve to loopback, private, link-local or cloud-metadata addresses
  * (SSRF guard). A direct request is checked again at connect time, so a second DNS answer cannot slip
  * past. A name sent through the egress proxy (`proxied`) is resolved and dialled abroad, so only an
  * internal local answer refuses it: the local resolver's poisoned answers for blocked sites (Teredo and
  * other unroutable addresses) would otherwise refuse them. Only local debugging may disable the guard
- * via ALLOW_PRIVATE_NETWORK_FETCH.
+ * via ALLOW_PRIVATE_NETWORK_FETCH. Docker Compose services listed in INTERNAL_FETCH_HOSTS (comma-
+ * separated) are also allowed so the worker can pull from an in-stack RSS bridge.
  */
 export async function assertPublicUrl(url: string, allowPrivate = false, proxied = false): Promise<URL> {
   const u = new URL(url);
   if (u.protocol !== "http:" && u.protocol !== "https:") throw new Error(`Blocked protocol ${u.protocol}`);
   if (allowPrivate) return u;
   const host = u.hostname.replace(/^\[|\]$/g, "").toLowerCase();
+  if (allowedInternalHost(host)) return u;
   if (blockedHostname(host)) throw new Error(`Blocked host ${host}`);
   const literal = net.isIP(host) !== 0;
   const addresses = literal ? [{ address: host }] : await lookup(host, { all: true });
@@ -193,15 +202,21 @@ type LookupCallback = (err: NodeJS.ErrnoException | null, address: string | Arra
  */
 export function guardedLookup(hostname: string, options: { all?: boolean; family?: number } | number, callback: LookupCallback): void {
   const opts = typeof options === "number" ? { family: options } : options;
-  if (blockedHostname(hostname.toLowerCase())) {
+  const host = hostname.toLowerCase();
+  if (blockedHostname(host) && !allowedInternalHost(host)) {
     callback(Object.assign(new Error(`Blocked host ${hostname}`), { code: "EBLOCKED" }), opts.all ? [] : "", 0);
     return;
   }
   lookup(hostname, { all: true, family: opts.family ?? 0 }).then(
     (list) => {
-      const bad = list.find((a) => isBlockedAddress(a.address));
-      if (bad || list.length === 0) {
-        callback(Object.assign(new Error(`Blocked private address for ${hostname}`), { code: "EBLOCKED" }), opts.all ? [] : "", 0);
+      if (!allowedInternalHost(host)) {
+        const bad = list.find((a) => isBlockedAddress(a.address));
+        if (bad || list.length === 0) {
+          callback(Object.assign(new Error(`Blocked private address for ${hostname}`), { code: "EBLOCKED" }), opts.all ? [] : "", 0);
+          return;
+        }
+      } else if (list.length === 0) {
+        callback(Object.assign(new Error(`No address for ${hostname}`), { code: "ENOTFOUND" }), opts.all ? [] : "", 0);
         return;
       }
       if (opts.all) callback(null, list);

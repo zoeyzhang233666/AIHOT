@@ -10,7 +10,8 @@
         "sci99",
         "spot-market",
         "supply-demand"
-      ]
+      ],
+      "tags": []
     },
     {
       "slug": "sci99",
@@ -22,7 +23,8 @@
         "longzhong",
         "spot-market",
         "industry-analysis"
-      ]
+      ],
+      "tags": []
     },
     {
       "slug": "shfe",
@@ -34,7 +36,8 @@
         "exchange-policy",
         "crude-oil",
         "rubber"
-      ]
+      ],
+      "tags": []
     },
     {
       "slug": "dce",
@@ -46,7 +49,8 @@
         "exchange-policy",
         "polyolefins",
         "pvc"
-      ]
+      ],
+      "tags": []
     },
     {
       "slug": "czce",
@@ -59,7 +63,8 @@
         "methanol",
         "pta",
         "soda-ash"
-      ]
+      ],
+      "tags": []
     },
     {
       "slug": "crude-oil",
@@ -218,7 +223,9 @@
       "name": "现货市场",
       "group": "genre",
       "tags": [
-        "现货行情"
+        "原料来源",
+        "库存",
+        "开工率"
       ],
       "definition": "化工品现货报价、成交、区域价差与短期市场变化。",
       "related": [
@@ -232,7 +239,9 @@
       "name": "期货研报",
       "group": "genre",
       "tags": [
-        "期货研报"
+        "原料来源",
+        "基差",
+        "月差"
       ],
       "definition": "期货公司和研究机构发布的能源化工日报、周报、专题和策略研究。",
       "related": [
@@ -246,7 +255,9 @@
       "name": "企业商机",
       "group": "genre",
       "tags": [
-        "商机供需"
+        "商机",
+        "招标",
+        "采购"
       ],
       "definition": "采购、招标、求购、供应、扩产、项目投产和进出口等可转化为业务机会的信息。",
       "related": [
@@ -260,8 +271,11 @@
       "name": "供需与装置",
       "group": "genre",
       "tags": [
-        "装置/产能",
-        "库存/开工"
+        "原料来源",
+        "装置检修",
+        "新增产能",
+        "库存",
+        "开工率"
       ],
       "definition": "装置停车复产、检修、新增产能、库存、开工率、产量和需求变化。",
       "related": [
@@ -275,7 +289,8 @@
       "name": "地缘热点",
       "group": "genre",
       "tags": [
-        "地缘/宏观"
+        "地缘宏观",
+        "航运"
       ],
       "definition": "战争、制裁、OPEC、航运中断和宏观变化对原油及化工成本、供应和风险溢价的影响。",
       "related": [
@@ -289,7 +304,6 @@
       "name": "进出口与物流",
       "group": "genre",
       "tags": [
-        "进出口/物流",
         "进口",
         "出口",
         "航运"
@@ -306,7 +320,7 @@
       "name": "交易所与政策",
       "group": "genre",
       "tags": [
-        "政策/交易所"
+        "地缘宏观"
       ],
       "definition": "交易所规则、保证金、限仓、交割仓单以及产业、环保、进出口政策。",
       "related": [
@@ -320,7 +334,7 @@
       "name": "产业分析",
       "group": "genre",
       "tags": [
-        "行业分析"
+        "原料来源"
       ],
       "definition": "产业链供需、利润、价格驱动和中长期格局分析。",
       "related": [
@@ -349,7 +363,7 @@
       "name": "产业政策",
       "group": "genre",
       "tags": [
-        "政策/交易所"
+        "地缘宏观"
       ],
       "definition": "影响化工供需、生产、环保、安全、贸易和出口的政策变化。",
       "related": [

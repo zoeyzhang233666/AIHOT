@@ -107,7 +107,8 @@ export function pageFetchable(url: string, sourceKind: string): boolean {
 export async function extractArticleBody(articleId: string, allowJina = process.env.JINA_BODY_FALLBACK !== "false"): Promise<"ok" | "unconfirmed" | "skipped"> {
   const [a] = await sql<{ id: string; url: string; body_status: string; revision: number; x_post: { tweetId?: string } | null }[]>`
     SELECT id, url, body_status, revision, x_post FROM articles WHERE id = ${articleId}`;
-  if (!a || a.body_status === "ok") return "skipped";
+  // Feed summaries already stored as body (summaryIsBody / unconfirmed) skip page extract.
+  if (!a || a.body_status === "ok" || a.body_status === "unconfirmed") return "skipped";
   if (a.x_post?.tweetId) return extractXArticle(a.id, a.x_post.tweetId);
   const got = await extractFromUrl(a.url, { allowJina, subject: `article:${a.id}` });
   if (!got) {

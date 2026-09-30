@@ -1,7 +1,7 @@
-// Feed filters: the channel and category row, and search.
+// Feed filters: lens tabs (原料来源 / 应用去向 / 地缘宏观) and search.
 import { useEffect, useRef, useState } from "react";
 import { Form, Link, useNavigation, useSearchParams } from "react-router";
-import { CATEGORY_KEYS, CATEGORY_LABELS, CHANNEL_LABELS, type CategoryKey, type ChannelKey } from "@aihot/contracts/taxonomy";
+import { CATEGORY_KEYS, CATEGORY_LABELS, type CategoryKey, type ChannelKey } from "@aihot/contracts/taxonomy";
 import { IconClose, IconSearch } from "../../components/icons";
 import { PillTabs } from "../../components/ui/Tabs";
 
@@ -14,24 +14,46 @@ export function hrefWith(base: string, params: URLSearchParams, patch: Record<st
   }
   sp.delete("page");
   sp.delete("cursor");
+  sp.delete("opportunity"); // ChemHOT no longer exposes the opportunity overlay
   const s = sp.toString();
   return s ? `${base}?${s}` : base;
 }
 
 /**
- * The feed's one filter row (精选 and 全部动态 alike): 全部, 一手, then the categories. One choice at a
- * time: picking 一手 clears the category and picking a category clears 一手. Older 资讯 / X links
- * still filter; the row then shows 全部.
+ * 一级视角：全部 + 原料来源 / 应用去向 / 地缘宏观。不再展示「一手」或「只看商机」。
  */
-export function CategoryTabs({ base, category, channel = "all", layoutId, size = "md", className = "" }: { base: string; category: CategoryKey | null; channel?: ChannelKey; layoutId: string; size?: "md" | "sm"; className?: string }) {
+export function CategoryTabs({
+  base,
+  category,
+  channel = "all",
+  layoutId,
+  size = "md",
+  className = "",
+}: {
+  base: string;
+  category: CategoryKey | null;
+  channel?: ChannelKey;
+  layoutId: string;
+  size?: "md" | "sm";
+  className?: string;
+}) {
   const [params] = useSearchParams();
   const items = [
-    { key: "all", label: "全部", to: hrefWith(base, params, { category: null, channel: null }) },
-    { key: "firstParty", label: CHANNEL_LABELS.firstParty, to: hrefWith(base, params, { category: null, channel: "firstParty" }) },
-    ...CATEGORY_KEYS.map((k) => ({ key: k, label: CATEGORY_LABELS[k], to: hrefWith(base, params, { category: k, channel: null }) })),
+    { key: "all", label: "全部", to: hrefWith(base, params, { category: null, channel: null, tag: null }) },
+    ...CATEGORY_KEYS.map((k) => ({
+      key: k,
+      label: CATEGORY_LABELS[k],
+      to: hrefWith(base, params, {
+        category: k,
+        channel: null,
+        // switching lens clears node tag from the other tree
+        tag: null,
+      }),
+    })),
   ];
-  const active = channel === "firstParty" ? "firstParty" : (category ?? "all");
-  return <PillTabs items={items} active={active} layoutId={layoutId} label="筛选" size={size} className={className} />;
+  const active = category ?? "all";
+  void channel; // kept for loader compatibility; ChemHOT UI does not expose channel pills
+  return <PillTabs items={items} active={active} layoutId={layoutId} label="视角" size={size} className={className} />;
 }
 
 function useSlashFocus(ref: React.RefObject<HTMLInputElement | null>) {

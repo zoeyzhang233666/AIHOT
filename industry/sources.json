@@ -1,5 +1,5 @@
 {
-  "$comment": "ChemHOT 示范信源。公开且稳定的源可直接采集；隆众、卓创、期货公司研报和企业商机优先通过已授权/内部数据适配器推送到 external 源，避免绕过登录、付费墙或版权限制。",
+  "$comment": "ChemHOT 示范信源。公开且稳定的源可直接采集；隆众分类流通过 RSSHub（DIYgod/RSSHub oilchem，GitHub 社区维护）抓列表标题（正文常为付费墙，分析以标题为准）。东方财富搜索路由（eastmoney/search，GitHub PR #12309）按产业链关键词扩覆盖。卓创、期货研报全文和企业商机优先走已授权 external 推送。RSSHub 走同 Compose 内 http://rsshub:1200。",
   "sources": [
     {
       "id": "rss-eia-today-energy",
@@ -20,6 +20,1697 @@
         "官方",
         "能源",
         "宏观"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-oilprice",
+      "name": "OilPrice · Energy News",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://oilprice.com/rss/main",
+        "_aihot": {
+          "initialBackfillLimit": 8
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 30,
+      "tags": [
+        "原油",
+        "能源",
+        "地缘"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-chemengonline",
+      "name": "Chemical Engineering · Online",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://www.chemengonline.com/feed/",
+        "_aihot": {
+          "initialBackfillLimit": 6
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "化工",
+        "工程",
+        "政策"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-werss-wechat-all",
+      "name": "微信公众号聚合 · WeRSS",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://we-mp-rss:8001/feed/all.atom",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 30,
+      "tags": [
+        "公众号",
+        "研报",
+        "现货",
+        "期货"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": false
+    },
+    {
+      "id": "rss-cls-telegraph",
+      "name": "财联社 · 电报（RSSHub）",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/cls/telegraph",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 8
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 15,
+      "tags": [
+        "快讯",
+        "宏观",
+        "期货"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-cls-futures",
+      "name": "财联社 · 期货深度（RSSHub）",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/cls/depth/1124",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 5
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 30,
+      "tags": [
+        "期货",
+        "策略",
+        "能源化工"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-wallstreetcn-live",
+      "name": "华尔街见闻 · 全球快讯（RSSHub）",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/wallstreetcn/live/global",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 8
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 15,
+      "tags": [
+        "快讯",
+        "宏观",
+        "大宗商品"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-jin10",
+      "name": "金十数据（RSSHub）",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/jin10",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 8
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 15,
+      "tags": [
+        "快讯",
+        "宏观",
+        "期货"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-finechem",
+      "name": "东方财富 · 精细化工（RSSHub）",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/%E7%B2%BE%E7%BB%86%E5%8C%96%E5%B7%A5",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 8
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 30,
+      "tags": [
+        "精细化工",
+        "现货",
+        "产业资讯"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-chem-futures",
+      "name": "东方财富 · 化工期货（RSSHub）",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/%E5%8C%96%E5%B7%A5%E6%9C%9F%E8%B4%A7",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 8
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 30,
+      "tags": [
+        "化工期货",
+        "期货",
+        "策略"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-oilchem-energy",
+      "name": "隆众资讯 · 能源（RSSHub）",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/oilchem/list/101",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 12
+        }
+      },
+      "tier": "T2",
+      "first_party": true,
+      "owner_entity_id": "oilchem",
+      "participation_mode": "editorial",
+      "interval_minutes": 45,
+      "tags": [
+        "原油",
+        "能源",
+        "S-01"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": false
+    },
+    {
+      "id": "rss-oilchem-organic",
+      "name": "隆众资讯 · 有机（RSSHub）",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/oilchem/list/102",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 12
+        }
+      },
+      "tier": "T2",
+      "first_party": true,
+      "owner_entity_id": "oilchem",
+      "participation_mode": "editorial",
+      "interval_minutes": 45,
+      "tags": [
+        "有机",
+        "中间体",
+        "S-01"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": false
+    },
+    {
+      "id": "rss-oilchem-inorganic",
+      "name": "隆众资讯 · 无机（RSSHub）",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/oilchem/list/103",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 12
+        }
+      },
+      "tier": "T2",
+      "first_party": true,
+      "owner_entity_id": "oilchem",
+      "participation_mode": "editorial",
+      "interval_minutes": 45,
+      "tags": [
+        "无机",
+        "S-04",
+        "S-08"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-oilchem-rubber-plastic",
+      "name": "隆众资讯 · 橡塑（RSSHub）",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/oilchem/list/104",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 12
+        }
+      },
+      "tier": "T2",
+      "first_party": true,
+      "owner_entity_id": "oilchem",
+      "participation_mode": "editorial",
+      "interval_minutes": 45,
+      "tags": [
+        "橡塑",
+        "PE",
+        "PP",
+        "PVC"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-oilchem-fiber",
+      "name": "隆众资讯 · 化纤（RSSHub）",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/oilchem/list/105",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 12
+        }
+      },
+      "tier": "T2",
+      "first_party": true,
+      "owner_entity_id": "oilchem",
+      "participation_mode": "editorial",
+      "interval_minutes": 45,
+      "tags": [
+        "化纤",
+        "聚酯",
+        "PTA"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-oilchem-coalchem",
+      "name": "隆众资讯 · 煤化工（RSSHub）",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/oilchem/list/106",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 12
+        }
+      },
+      "tier": "T2",
+      "first_party": true,
+      "owner_entity_id": "oilchem",
+      "participation_mode": "editorial",
+      "interval_minutes": 45,
+      "tags": [
+        "煤化工",
+        "甲醇",
+        "S-03"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-oilchem-agro",
+      "name": "隆众资讯 · 农化（RSSHub）",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/oilchem/list/107",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": true,
+      "owner_entity_id": "oilchem",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "农化",
+        "农药",
+        "肥料"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-oilchem-coatings",
+      "name": "隆众资讯 · 涂料（RSSHub）",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/oilchem/list/108",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": true,
+      "owner_entity_id": "oilchem",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "涂料",
+        "油墨",
+        "精细化工"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-oilchem-fluorosilicon",
+      "name": "隆众资讯 · 氟硅（RSSHub）",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/oilchem/list/109",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": true,
+      "owner_entity_id": "oilchem",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "氟化工",
+        "有机硅",
+        "电子化学品"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-oilchem-olefins",
+      "name": "隆众资讯 · 烯烃聚烯烃（RSSHub）",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/oilchem/list/110",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 12
+        }
+      },
+      "tier": "T2",
+      "first_party": true,
+      "owner_entity_id": "oilchem",
+      "participation_mode": "editorial",
+      "interval_minutes": 45,
+      "tags": [
+        "烯烃",
+        "PE",
+        "PP"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-oilchem-pta",
+      "name": "隆众资讯 · PTA（RSSHub）",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/oilchem/list/143",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 12
+        }
+      },
+      "tier": "T2",
+      "first_party": true,
+      "owner_entity_id": "oilchem",
+      "participation_mode": "editorial",
+      "interval_minutes": 45,
+      "tags": [
+        "PTA",
+        "聚酯",
+        "芳烃"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-oilchem-methanol",
+      "name": "隆众资讯 · 甲醇（RSSHub）",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/oilchem/list/140",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 12
+        }
+      },
+      "tier": "T2",
+      "first_party": true,
+      "owner_entity_id": "oilchem",
+      "participation_mode": "editorial",
+      "interval_minutes": 45,
+      "tags": [
+        "甲醇",
+        "煤化工"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": false
+    },
+    {
+      "id": "rss-eastmoney-polyester",
+      "name": "东方财富 · 聚酯PTA（RSSHub）",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/PTA%20%E8%81%9A%E9%85%AF",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 30,
+      "tags": [
+        "PTA",
+        "聚酯"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-pvc",
+      "name": "东方财富 · PVC氯碱（RSSHub）",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/PVC%20%E6%B0%A2%E7%A2%B1",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 30,
+      "tags": [
+        "PVC",
+        "烧碱",
+        "氯碱"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-pe-pp",
+      "name": "东方财富 · 聚乙烯聚丙烯（RSSHub）",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/%E8%81%9A%E4%B9%99%E7%83%AF%20%E8%81%9A%E4%B8%99%E7%83%AF",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 30,
+      "tags": [
+        "PE",
+        "PP",
+        "烯烃"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-electronic-chem",
+      "name": "东方财富 · 电子化学品（RSSHub）",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/%E7%94%B5%E5%AD%90%E5%8C%96%E5%AD%A6%E5%93%81",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 40,
+      "tags": [
+        "电子化学品",
+        "S-05"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-water-treatment",
+      "name": "东方财富 · 水处理化学品（RSSHub）",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/%E6%B0%B4%E5%A4%84%E7%90%86%E5%8C%96%E5%AD%A6%E5%93%81",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 40,
+      "tags": [
+        "水处理",
+        "S-06"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-chem-tender",
+      "name": "东方财富 · 化工招标采购（RSSHub）",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/%E5%8C%96%E5%B7%A5%20%E6%8B%9B%E6%A0%87",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 12
+        }
+      },
+      "tier": "T1_5",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 30,
+      "tags": [
+        "招标",
+        "采购",
+        "商机"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-lithium",
+      "name": "东方财富 · 锂盐卤水（RSSHub）",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/%E7%A2%B3%E9%85%B8%E9%94%82%20%E7%9B%90%E6%B9%96",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 40,
+      "tags": [
+        "锂",
+        "盐湖",
+        "S-08",
+        "新能源材料"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-plasticstoday",
+      "name": "PlasticsToday",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://www.plasticstoday.com/rss.xml",
+        "_aihot": {
+          "initialBackfillLimit": 10
+        },
+        "summaryIsBody": true
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "塑料",
+        "聚合物",
+        "应用"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-european-coatings",
+      "name": "European Coatings · News",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://www.european-coatings.com/rss/news",
+        "_aihot": {
+          "initialBackfillLimit": 8
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 90,
+      "tags": [
+        "涂料",
+        "精细化工",
+        "应用"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": false
+    },
+    {
+      "id": "rss-bbc-business",
+      "name": "BBC · Business",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://feeds.bbci.co.uk/news/business/rss.xml",
+        "_aihot": {
+          "initialBackfillLimit": 8
+        },
+        "summaryIsBody": true
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "宏观",
+        "地缘",
+        "贸易"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-ethylene",
+      "name": "东方财富 · 乙烯丙烯",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/%E4%B9%99%E7%83%AF%20%E4%B8%99%E7%83%AF",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 30,
+      "tags": [
+        "烯烃",
+        "PE",
+        "PP"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-butadiene",
+      "name": "东方财富 · 丁二烯",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/%E4%B8%81%E4%BA%8C%E7%83%AF",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 40,
+      "tags": [
+        "丁二烯",
+        "橡胶"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-benzene",
+      "name": "东方财富 · 纯苯甲苯",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/%E7%BA%AF%E8%8B%AF%20%E7%94%B2%E8%8B%AF",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 30,
+      "tags": [
+        "芳烃",
+        "纯苯"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-px",
+      "name": "东方财富 · PX精对苯二甲酸",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/PX%20%E7%B2%BE%E5%AF%B9%E8%8B%AF%E4%BA%8C%E7%94%B2%E9%85%B8",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 30,
+      "tags": [
+        "PX",
+        "芳烃"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-meg",
+      "name": "东方财富 · MEG乙二醇",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/MEG%20%E4%B9%99%E4%BA%8C%E9%86%87",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 30,
+      "tags": [
+        "MEG",
+        "聚酯"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-methanol",
+      "name": "东方财富 · 甲醇烯烃",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/%E7%94%B2%E9%86%87%20%E7%85%A4%E5%88%B6%E7%83%AF%E7%83%83",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 30,
+      "tags": [
+        "甲醇",
+        "煤化工"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-acetic",
+      "name": "东方财富 · 醋酸乙烯",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/%E9%86%8B%E9%85%B8%20%E9%86%8B%E9%85%B8%E4%B9%99%E7%83%AF",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 40,
+      "tags": [
+        "醋酸",
+        "有机"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-caustic",
+      "name": "东方财富 · 烧碱纯碱",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/%E7%83%A7%E7%A2%B1%20%E7%BA%AF%E7%A2%B1",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 30,
+      "tags": [
+        "氯碱",
+        "无机"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-sulfur",
+      "name": "东方财富 · 硫磺硫酸",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/%E7%A1%AB%E7%A3%BA%20%E7%A1%AB%E9%85%B8",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 40,
+      "tags": [
+        "硫磺",
+        "无机"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-silicone",
+      "name": "东方财富 · 有机硅DMC",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/%E6%9C%89%E6%9C%BA%E7%A1%85%20DMC",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 40,
+      "tags": [
+        "有机硅",
+        "S-01-08"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-fluoro",
+      "name": "东方财富 · 氟化工制冷剂",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/%E6%B0%9F%E5%8C%96%E5%B7%A5%20%E5%88%B6%E5%86%B7%E5%89%82",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 40,
+      "tags": [
+        "氟化工",
+        "制冷剂"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-tio2",
+      "name": "东方财富 · 钛白粉",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/%E9%92%9B%E7%99%BD%E7%B2%89",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 40,
+      "tags": [
+        "钛白粉",
+        "涂料"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-mdi",
+      "name": "东方财富 · MDI聚氨酯",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/MDI%20TDI%20%E8%81%9A%E6%B0%A8%E9%85%AF",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 30,
+      "tags": [
+        "MDI",
+        "聚氨酯"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-epoxy",
+      "name": "东方财富 · 环氧树脂双酚A",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/%E7%8E%AF%E6%B0%A7%E6%A0%91%E8%84%82%20%E5%8F%8C%E9%85%9AA",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 40,
+      "tags": [
+        "环氧树脂",
+        "精细化工"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-rubber",
+      "name": "东方财富 · 天然橡胶",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/%E5%A4%A9%E7%84%B6%E6%A9%A1%E8%83%B6",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 40,
+      "tags": [
+        "橡胶"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-agrochem",
+      "name": "东方财富 · 草甘膦农药",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/%E8%8D%89%E7%94%98%E8%86%A6%20%E5%86%9C%E8%8D%AF",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 40,
+      "tags": [
+        "农化",
+        "农药"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-fertilizer",
+      "name": "东方财富 · 尿素磷肥",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/%E5%B0%BF%E7%B4%A0%20%E7%A3%B7%E8%82%A5",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 40,
+      "tags": [
+        "肥料",
+        "农化"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-lng",
+      "name": "东方财富 · LNG天然气",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/LNG%20%E5%A4%A9%E7%84%B6%E6%B0%94",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 40,
+      "tags": [
+        "天然气",
+        "S-02"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-coal",
+      "name": "东方财富 · 动力煤焦炭",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/%E5%8A%A8%E5%8A%9B%E7%85%A4%20%E7%84%A6%E7%82%AD",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 40,
+      "tags": [
+        "煤炭",
+        "S-03"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-ironore",
+      "name": "东方财富 · 铁矿石",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/%E9%93%81%E7%9F%BF%E7%9F%B3",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "矿石",
+        "S-04"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-etgas",
+      "name": "东方财富 · 电子特气",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/%E7%94%B5%E5%AD%90%E7%89%B9%E6%B0%94",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 40,
+      "tags": [
+        "电子化学品",
+        "S-05"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-photoresist",
+      "name": "东方财富 · 光刻胶",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/%E5%85%89%E5%88%BB%E8%83%B6",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 40,
+      "tags": [
+        "电子化学品",
+        "光刻胶"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-li2co3",
+      "name": "东方财富 · 碳酸锂",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/%E7%A2%B3%E9%85%B8%E9%94%82%20%E6%B0%A2%E6%B0%A7%E5%8C%96%E9%94%82",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 30,
+      "tags": [
+        "锂",
+        "S-08"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-biodiesel",
+      "name": "东方财富 · 生物柴油",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/%E7%94%9F%E7%89%A9%E6%9F%B4%E6%B2%B9",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "生物质",
+        "S-07"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-acrylonitrile",
+      "name": "东方财富 · 丙烯腈",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/%E4%B8%99%E7%83%AF%E8%85%88",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 40,
+      "tags": [
+        "丙烯腈",
+        "化纤"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-caprolactam",
+      "name": "东方财富 · 己内酰胺尼龙",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/%E5%B7%B1%E5%86%85%E9%85%B0%E8%83%BA%20%E5%B0%BC%E9%BE%99",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 40,
+      "tags": [
+        "己内酰胺",
+        "尼龙"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-bdo",
+      "name": "东方财富 · 己二酸BDO",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/%E5%B7%B1%E4%BA%8C%E9%85%B8%20BDO",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 40,
+      "tags": [
+        "BDO",
+        "己二酸"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-chempark",
+      "name": "东方财富 · 化工园区",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/%E5%8C%96%E5%B7%A5%E5%9B%AD%E5%8C%BA",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 40,
+      "tags": [
+        "园区",
+        "政策"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-poe",
+      "name": "东方财富 · POE光伏胶膜",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/POE%20EVA%20%E8%83%B6%E8%86%9C",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 40,
+      "tags": [
+        "POE",
+        "光伏"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-lfp",
+      "name": "东方财富 · 磷酸铁锂",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/%E7%A3%B7%E9%85%B8%E9%93%81%E9%94%82",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 30,
+      "tags": [
+        "锂电",
+        "新能源材料"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-naphtha",
+      "name": "东方财富 · 石脑油裂解",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/%E7%9F%B3%E8%84%91%E6%B2%B9%20%E8%A3%82%E8%A7%A3",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 40,
+      "tags": [
+        "石脑油",
+        "原油"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-surfactant",
+      "name": "东方财富 · 表面活性剂",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/%E8%A1%A8%E9%9D%A2%E6%B4%BB%E6%80%A7%E5%89%82",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "表面活性剂",
+        "精细化工"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-coating-resin",
+      "name": "东方财富 · 涂料树脂",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/%E6%B6%82%E6%96%99%E6%A0%91%E8%84%82",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 40,
+      "tags": [
+        "涂料",
+        "树脂"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-carbide",
+      "name": "东方财富 · 电石氯碱",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/%E7%94%B5%E7%9F%B3%20%E6%B0%AF%E7%A2%B1",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 40,
+      "tags": [
+        "电石",
+        "氯碱"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-ev-materials",
+      "name": "东方财富 · 新能源材料",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/%E6%96%B0%E8%83%BD%E6%BA%90%E6%B1%BD%E8%BD%A6%20%E6%9D%90%E6%96%99",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 40,
+      "tags": [
+        "新能源材料",
+        "应用"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-textile-chem",
+      "name": "东方财富 · 纺织化纤下游",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/%E7%BA%BA%E7%BB%87%20%E5%8C%96%E7%BA%A4",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 40,
+      "tags": [
+        "纺织",
+        "应用"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-water-chem",
+      "name": "东方财富 · 水处理药剂",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/%E6%B0%B4%E5%A4%84%E7%90%86%20%E8%8D%AF%E5%89%82",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 40,
+      "tags": [
+        "水处理",
+        "S-06"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-eastmoney-chem-procure",
+      "name": "东方财富 · 原料采购招标",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/eastmoney/search/%E5%8E%9F%E6%96%99%20%E9%87%87%E8%B4%AD%20%E6%8B%9B%E6%A0%87",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 30,
+      "tags": [
+        "招标",
+        "商机"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-caixin-latest",
+      "name": "财新 · 最新（RSSHub）",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/caixin/latest",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 12
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 30,
+      "tags": [
+        "宏观",
+        "产业",
+        "政策"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-yicai-brief",
+      "name": "第一财经 · 快讯（RSSHub）",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/yicai/brief",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 15
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 20,
+      "tags": [
+        "快讯",
+        "宏观",
+        "产业"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-wallstreetcn-news",
+      "name": "华尔街见闻 · 全球资讯（RSSHub）",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://rsshub:1200/wallstreetcn/news/global",
+        "summaryIsBody": true,
+        "_aihot": {
+          "initialBackfillLimit": 12
+        }
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 20,
+      "tags": [
+        "宏观",
+        "地缘",
+        "大宗商品"
       ],
       "site_fulltext": false,
       "syndicate_fulltext": false

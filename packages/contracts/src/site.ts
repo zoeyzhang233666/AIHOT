@@ -105,6 +105,8 @@ export interface TimelineFilters {
   category: CategoryKey | null;
   tag: string | null;
   topic?: string | null;
+  /** When true, only items tagged 商机. */
+  opportunity?: boolean;
 }
 
 export interface TimelineResponse {
@@ -119,7 +121,7 @@ export interface TimelineResponse {
 }
 
 export interface PoolResponse {
-  filters: TimelineFilters & { q: string | null; tab: "time" | "relevance" };
+  filters: TimelineFilters & { q: string | null; tab: "time" | "relevance"; opportunity?: boolean };
   items: FeedItemSummary[];
   page: number;
   pageCount: number;
