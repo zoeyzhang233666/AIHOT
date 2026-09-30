@@ -92,16 +92,20 @@ export function channelCondition(channel: ChannelKey | null | undefined) {
   return sql`AND p.channel = ${channel}`;
 }
 
-export function categoryCondition(category: CategoryKey | null | undefined, v1 = false) {
+export function categoryCondition(category: CategoryKey | null | undefined) {
   if (!category) return sql``;
-  // v1 and RSS publish opinion as tip.
-  if (v1 && category === "tip") return sql`AND p.category IN ('tip', 'opinion')`;
   return sql`AND p.category = ${category}`;
 }
 
 export function tagCondition(tag: string | null | undefined) {
   if (!tag) return sql``;
   return sql`AND p.tags @> ${[tag]}::text[]`;
+}
+
+/** Every listed tag must be present (AND). */
+export function tagsContainCondition(tags: string[] | null | undefined) {
+  if (!tags || tags.length === 0) return sql``;
+  return sql`AND p.tags @> ${tags}::text[]`;
 }
 
 export function topicCondition(topicTags: string[] | null | undefined) {

@@ -105,6 +105,8 @@ export interface TimelineFilters {
   category: CategoryKey | null;
   tag: string | null;
   topic?: string | null;
+  /** When true, only items tagged 商机. */
+  opportunity?: boolean;
 }
 
 export interface TimelineResponse {
@@ -119,7 +121,7 @@ export interface TimelineResponse {
 }
 
 export interface PoolResponse {
-  filters: TimelineFilters & { q: string | null; tab: "time" | "relevance" };
+  filters: TimelineFilters & { q: string | null; tab: "time" | "relevance"; opportunity?: boolean };
   items: FeedItemSummary[];
   page: number;
   pageCount: number;
@@ -135,6 +137,42 @@ export interface OutlineEntry {
   level: number;
 }
 
+export interface ChemicalProductRef {
+  name: string;
+  aliases: string[];
+  cas: string | null;
+  family: string | null;
+  grade: string | null;
+  purity: string | null;
+  specification: string | null;
+  brand: string | null;
+}
+
+export interface BusinessOpportunityView {
+  kind: "purchase" | "wanted" | "supply" | "tender" | "project" | "capacity_expansion" | "new_production" | "distributor" | "import" | "export" | "other";
+  company: string | null;
+  companyRole: "buyer" | "seller" | "project_owner" | "trader" | "unknown";
+  productName: string | null;
+  cas: string | null;
+  grade: string | null;
+  purity: string | null;
+  specification: string | null;
+  package: string | null;
+  quantity: string | null;
+  frequency: string | null;
+  province: string | null;
+  city: string | null;
+  region: string | null;
+  deliveryLocation: string | null;
+  deadline: string | null;
+  evidence: string | null;
+}
+
+export interface ChemicalMarketMetadata {
+  products: ChemicalProductRef[];
+  businessOpportunity: BusinessOpportunityView | null;
+}
+
 export interface ItemDetail extends ItemSummary {
   readingMode: "full" | "summary-only";
   author: string | null;
@@ -146,6 +184,8 @@ export interface ItemDetail extends ItemSummary {
   indexable: boolean;
   markdownAvailable: boolean;
   group: GroupInfo | null;
+  /** Dynamic chemical-product/CAS extraction and structured business-opportunity fields. */
+  market: ChemicalMarketMetadata | null;
 }
 
 export interface GroupReport {

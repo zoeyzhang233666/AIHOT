@@ -60,7 +60,7 @@ export function isIndexable(p: { visibility: string; hasSummary: boolean; select
   return p.visibility === "public" && p.hasSummary && p.seoExcludedAt === null && (p.selected || p.seoIndexedAt !== null);
 }
 
-/** Display tags exclude internal entity markers. */
+/** Display tags exclude internal entity markers and chain-node ids (shown on the map instead). */
 export function displayTags(tags: string[]): string[] {
-  return tags.filter((t) => !t.startsWith("entity:"));
+  return tags.filter((t) => !t.startsWith("entity:") && !t.startsWith("src:") && !t.startsWith("app:"));
 }

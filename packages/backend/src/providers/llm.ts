@@ -15,6 +15,8 @@ export interface ModelSpec {
   apiKeyEnv: string;
   /** Extra request fields, e.g. switching reasoning off for short structured tasks. */
   extra?: Record<string, unknown>;
+  /** Extra request headers some gateways require (e.g. a routing session id). */
+  headers?: Record<string, string>;
   jsonMode: boolean;
   vision?: boolean;
 }
@@ -28,12 +30,23 @@ function extraFromEnv(value: string | undefined): Record<string, unknown> | unde
   }
 }
 
+function headersFromEnv(value: string | undefined): Record<string, string> | undefined {
+  if (!value) return undefined;
+  try {
+    const parsed = JSON.parse(value) as Record<string, unknown>;
+    return Object.fromEntries(Object.entries(parsed).map(([k, v]) => [k, String(v)]));
+  } catch {
+    throw new Error("LLM_EXTRA_HEADERS must be a JSON object, e.g. {\"x-opencode-session\": \"chemhot\"}");
+  }
+}
+
 export const MODELS: Record<string, ModelSpec> = {
   // Read from the environment at call time.
   default: {
     key: "default", service: "llm", baseUrlEnv: "LLM_BASE_URL", apiKeyEnv: "LLM_API_KEY",
     get model() { return process.env.LLM_MODEL ?? ""; },
     get extra() { return extraFromEnv(process.env.LLM_EXTRA_JSON); },
+    get headers() { return headersFromEnv(process.env.LLM_EXTRA_HEADERS); },
     get jsonMode() { return process.env.LLM_JSON_MODE !== "false"; },
     get vision() { return process.env.LLM_VISION === "true"; },
   },
@@ -192,7 +205,7 @@ export async function chatJson<S extends z.ZodType>(opts: ChatJsonOptions<S>): P
       try {
         res = await fetch(`${baseUrl.replace(/\/$/, "")}/chat/completions`, {
           method: "POST",
-          headers: { "content-type": "application/json", authorization: `Bearer ${apiKey}` },
+          headers: { "content-type": "application/json", authorization: `Bearer ${apiKey}`, ...(spec.headers ?? {}) },
           body: JSON.stringify(body),
           signal: AbortSignal.timeout(opts.timeoutMs ?? 120_000),
         });

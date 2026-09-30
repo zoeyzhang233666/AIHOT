@@ -10,7 +10,7 @@
 // Material with only a title or a feed summary has its article page fetched before it is judged.
 import { z } from "zod";
 import { CATEGORY_KEYS } from "@aihot/contracts/taxonomy";
-import { CATEGORIES } from "@aihot/industry/taxonomy";
+import { CATEGORIES, PRODUCT_FAMILIES } from "@aihot/industry/taxonomy";
 import { SELECTION } from "@aihot/industry/selection";
 import { sql } from "../db.ts";
 import { chatJson, MODELS, type ContentPart } from "../providers/llm.ts";
@@ -27,6 +27,7 @@ import {
 } from "./writing.ts";
 import { CATEGORY_BY_ITEM_TYPE, CATEGORY_GUIDE, CATEGORY_TAGS, ENTITIES, ENTITY_TAGS, ITEM_TYPES, normalizeTags, TOPIC_TAGS } from "./vocabulary.ts";
 import { promptText, promptVersion } from "./prompts.ts";
+import { chainTagsFor } from "@aihot/industry/chains";
 
 export { buildMaterial, loadAnalyzeInput, type AnalyzeInputArticle };
 
@@ -120,10 +121,45 @@ const FactSchema = z
   .nullable()
   .catch(null);
 
+const ProductSchema = z.object({
+  name: z.string().trim().min(1).max(120),
+  aliases: z.array(z.string().trim().min(1).max(120)).max(8).catch([]),
+  cas: z.string().trim().max(32).nullable().optional().catch(null),
+  family: z.enum(PRODUCT_FAMILIES).nullable().optional().catch(null),
+  grade: z.string().trim().max(120).nullable().optional().catch(null),
+  purity: z.string().trim().max(80).nullable().optional().catch(null),
+  specification: z.string().trim().max(240).nullable().optional().catch(null),
+  brand: z.string().trim().max(120).nullable().optional().catch(null),
+});
+
+const BusinessOpportunitySchema = z.object({
+  kind: z.enum(["purchase", "wanted", "supply", "tender", "project", "capacity_expansion", "new_production", "distributor", "import", "export", "other"]),
+  company: z.string().trim().max(200).nullable().optional().catch(null),
+  companyRole: z.enum(["buyer", "seller", "project_owner", "trader", "unknown"]).catch("unknown"),
+  productName: z.string().trim().max(120).nullable().optional().catch(null),
+  cas: z.string().trim().max(32).nullable().optional().catch(null),
+  grade: z.string().trim().max(120).nullable().optional().catch(null),
+  purity: z.string().trim().max(80).nullable().optional().catch(null),
+  specification: z.string().trim().max(240).nullable().optional().catch(null),
+  package: z.string().trim().max(160).nullable().optional().catch(null),
+  quantity: z.string().trim().max(120).nullable().optional().catch(null),
+  frequency: z.string().trim().max(120).nullable().optional().catch(null),
+  province: z.string().trim().max(80).nullable().optional().catch(null),
+  city: z.string().trim().max(80).nullable().optional().catch(null),
+  region: z.string().trim().max(80).nullable().optional().catch(null),
+  deliveryLocation: z.string().trim().max(160).nullable().optional().catch(null),
+  deadline: z.string().trim().max(120).nullable().optional().catch(null),
+  evidence: z.string().trim().max(240).nullable().optional().catch(null),
+}).nullable().catch(null);
+
 const StructureSchema = z.object({
   category: z.enum(CATEGORY_KEYS).nullable().catch(null),
   tags: z.array(z.string()).max(12).catch([]),
   subjects: z.array(z.string()).max(6).catch([]),
+  sourcePaths: z.array(z.string().trim().min(1).max(40)).max(4).catch([]),
+  applications: z.array(z.string().trim().min(1).max(40)).max(4).catch([]),
+  products: z.array(ProductSchema).max(12).catch([]),
+  businessOpportunity: BusinessOpportunitySchema,
   fact: FactSchema,
 });
 
@@ -148,6 +184,7 @@ const STRUCTURE_SYSTEM = promptText("structure", {
   topicTags: TOPIC_TAGS.join("、"),
   entityTags: ENTITY_TAGS.join("、"),
   entities: Object.entries(ENTITIES).map(([id, e]) => `${id}（${e.aliases.slice(0, 3).join("/")}）`).join("，"),
+  productFamilies: PRODUCT_FAMILIES.join("、"),
 });
 
 export interface AnalysisRun {
@@ -171,7 +208,19 @@ export interface AnalysisRun {
     receiptIds: number[];
     reused: boolean;
   } | null;
-  structure: { model: string; category: string | null; tags: string[]; subjects: string[]; fact: z.infer<typeof FactSchema>; receiptId: number; reused: boolean } | null;
+  structure: {
+    model: string;
+    category: string | null;
+    tags: string[];
+    subjects: string[];
+    sourcePaths: string[];
+    applications: string[];
+    products: z.infer<typeof ProductSchema>[];
+    businessOpportunity: z.infer<typeof BusinessOpportunitySchema>;
+    fact: z.infer<typeof FactSchema>;
+    receiptId: number;
+    reused: boolean;
+  } | null;
 }
 
 const isContentFilter = (error: unknown) => error instanceof ProviderRejectedError && !error.retryable && /contentFilter|"1301"/.test(error.message);
@@ -252,11 +301,23 @@ async function runStructure(a: AnalyzeInputArticle, opts: StepOpts): Promise<Non
     user: buildMaterial(a),
     schema: StructureSchema,
     temperature: 0.2,
-    maxTokens: 800,
+    maxTokens: 1200,
     attemptTag: tagged(opts.attemptTag, "structure"),
   });
   const subjects = [...new Set(res.data.subjects.map((s) => s.trim().toLowerCase()).filter((s) => s in ENTITIES))];
-  return { model: res.model, category: res.data.category, tags: normalizeTags(res.data.tags), subjects, fact: res.data.fact, receiptId: res.receiptId, reused: res.reused };
+  return {
+    model: res.model,
+    category: res.data.category,
+    tags: normalizeTags(res.data.tags),
+    subjects,
+    sourcePaths: res.data.sourcePaths,
+    applications: res.data.applications,
+    products: res.data.products,
+    businessOpportunity: res.data.businessOpportunity,
+    fact: res.data.fact,
+    receiptId: res.receiptId,
+    reused: res.reused,
+  };
 }
 
 /** The content understanding; null when the model's content filter declines the material. */
@@ -384,6 +445,12 @@ export function normalizeAnalysis(run: AnalysisRun) {
     const display = ENTITIES[s]?.displayTag;
     if (display && !tags.includes(display)) tags.push(display);
   }
+  const sourcePaths = run.structure?.sourcePaths ?? [];
+  const applications = run.structure?.applications ?? [];
+  for (const t of [...chainTagsFor("source", sourcePaths), ...chainTagsFor("application", applications)]) {
+    if (!tags.includes(t)) tags.push(t);
+  }
+  if (run.structure?.businessOpportunity && !tags.includes("商机")) tags.push("商机");
   return {
     relevance,
     selected,
@@ -398,6 +465,10 @@ export function normalizeAnalysis(run: AnalysisRun) {
     titleZh,
     summaryZh,
     reasonZh: run.writing?.reasonZh ?? null,
+    sourcePaths,
+    applications,
+    products: run.structure?.products ?? [],
+    businessOpportunity: run.structure?.businessOpportunity ?? null,
     fact: run.structure?.fact ?? null,
   };
 }
@@ -432,6 +503,10 @@ export async function analyzeArticle(articleId: string, opts: StepOpts = {}): Pr
     scores: out.scores, scoreModel: out.scoreModel, threshold: out.threshold, ...(out.scoreRefused ? { scoreRefused: true } : {}),
     ...(w ? { writer: w.kind, writerModel: w.model, itemType: w.itemType ?? null, authorRole: w.authorRole ?? null } : {}),
     ...(w?.identityGuard?.outcome === "fallback" ? { identityGuard: w.identityGuard } : {}),
+    products: out.products,
+    businessOpportunity: out.businessOpportunity,
+    sourcePaths: out.sourcePaths,
+    applications: out.applications,
     fact: out.fact,
   };
   const committed = await sql.begin(async (tx) => {

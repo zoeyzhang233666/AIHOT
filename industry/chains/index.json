@@ -1,0 +1,19 @@
+{
+  "source": {
+    "file": "source-tree.json",
+    "version": "v2.1",
+    "roots": 8,
+    "nodes": 821
+  },
+  "application": {
+    "file": "application-tree.json",
+    "version": "v3.0",
+    "roots": 5,
+    "nodes": 3003
+  },
+  "generatedAt": "2026-09-29T08:00:17.641Z",
+  "sources": {
+    "line1": "C:\\Users\\EDY\\Nutstore\\1\\ob\\线1_来源路径树_v2.1-蒋老师.md",
+    "line2": "C:\\Users\\EDY\\Nutstore\\1\\ob\\线2_应用去向树_v3.0-蒋老师.md"
+  }
+}

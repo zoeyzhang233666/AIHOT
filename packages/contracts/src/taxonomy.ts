@@ -20,6 +20,7 @@ export function isCategoryKey(value: unknown): value is CategoryKey {
   return typeof value === "string" && (CATEGORY_KEYS as readonly string[]).includes(value);
 }
 
+/** Public feed channels. firstParty remains query-compatible for old links but is not shown in ChemHOT UI. */
 export const CHANNEL_KEYS = ["all", "news", "x", "firstParty"] as const;
 export type ChannelKey = (typeof CHANNEL_KEYS)[number];
 
@@ -27,8 +28,12 @@ export const CHANNEL_LABELS: Record<ChannelKey, string> = {
   all: "全部",
   news: "资讯",
   x: "X",
-  firstParty: "一手",
+  firstParty: "官方",
 };
+
+/** Homepage / 全部动态 一级视角（与 CATEGORIES 一致）。 */
+export const LENS_KEYS = ["source-path", "application", "macro"] as const;
+export type LensKey = (typeof LENS_KEYS)[number];
 
 export function isChannelKey(value: unknown): value is ChannelKey {
   return typeof value === "string" && (CHANNEL_KEYS as readonly string[]).includes(value);

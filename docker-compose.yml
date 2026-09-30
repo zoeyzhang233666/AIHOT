@@ -13,6 +13,8 @@ x-app: &app
     AIHOT_DATA_DIR: /data
     API_BASE_URL: http://api:3001
     LOCAL_ROUTER_URL: http://web:3000
+    # Allow worker/api to fetch Compose-internal RSS bridges (RSSHub).
+    INTERNAL_FETCH_HOSTS: rsshub
   volumes:
     - data:/data
   depends_on:
@@ -35,6 +37,36 @@ services:
       timeout: 5s
       retries: 30
 
+  # Local RSS bridge for Chinese finance/commodity sites that have no public feed.
+  redis:
+    image: redis:alpine
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  rsshub:
+    image: diygod/rsshub
+    restart: unless-stopped
+    ports:
+      - "1200:1200"
+    environment:
+      NODE_ENV: production
+      CACHE_TYPE: redis
+      REDIS_URL: redis://redis:6379/
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:1200/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+
   # Applies the database migrations and seeds the topics and demo sources, then exits.
   setup:
     <<: *app
@@ -51,6 +83,8 @@ services:
     depends_on:
       setup:
         condition: service_completed_successfully
+      rsshub:
+        condition: service_started
 
   worker:
     <<: *app
@@ -58,6 +92,8 @@ services:
     depends_on:
       setup:
         condition: service_completed_successfully
+      rsshub:
+        condition: service_started
 
   web:
     <<: *app

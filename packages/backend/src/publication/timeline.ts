@@ -7,7 +7,7 @@ import { beijingDate } from "@aihot/contracts/time";
 import { sql } from "../db.ts";
 import { decodeCursor, encodeCursor, InvalidCursorError, queryBinding } from "../lib/cursor.ts";
 import {
-  ITEM_COLUMNS, ITEM_FROM, categoryCondition, channelCondition, selectedCondition, tagCondition, toFeedItemSummary, topicCondition,
+  ITEM_COLUMNS, ITEM_FROM, categoryCondition, channelCondition, selectedCondition, tagsContainCondition, toFeedItemSummary, topicCondition,
   type ItemRow,
 } from "./items.ts";
 
@@ -23,12 +23,19 @@ interface GroupRow {
   anchor_at: Date;
 }
 
+function requiredTags(q: TimelineQuery): string[] {
+  const tags: string[] = [];
+  if (q.tag) tags.push(q.tag);
+  if (q.opportunity) tags.push("商机");
+  return tags;
+}
+
 function filterSql(q: TimelineQuery) {
-  return sql`${channelCondition(q.channel)} ${categoryCondition(q.category)} ${tagCondition(q.tag)} ${topicCondition(q.topicTags)}`;
+  return sql`${channelCondition(q.channel)} ${categoryCondition(q.category)} ${tagsContainCondition(requiredTags(q))} ${topicCondition(q.topicTags)}`;
 }
 
 function binding(q: TimelineQuery): string {
-  return queryBinding({ c: q.channel, k: q.category, t: q.tag, p: q.topic ?? null });
+  return queryBinding({ c: q.channel, k: q.category, t: q.tag, o: q.opportunity ? 1 : 0, p: q.topic ?? null });
 }
 
 /** Representative preference: first-party, full text, higher score, earliest. */
@@ -197,7 +204,7 @@ export async function loadTimeline(q: TimelineQuery): Promise<Omit<TimelineRespo
   const refreshAt = await refreshAtRead;
   const last = page[page.length - 1];
   const nextCursor = hasMore && last ? encodeCursor("tl1", { a: last.anchor_at.getTime(), g: last.gk, b: bind }) : null;
-  return { filters: { channel: q.channel, category: q.category, tag: q.tag, topic: q.topic ?? null }, cards, nextCursor, refreshAt, dayCounts };
+  return { filters: { channel: q.channel, category: q.category, tag: q.tag, topic: q.topic ?? null, opportunity: !!q.opportunity }, cards, nextCursor, refreshAt, dayCounts };
 }
 
 /** Earliest pending release in this scope; caches of this scope must expire by then. */

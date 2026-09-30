@@ -1,3 +1,4 @@
+import { SITE, withSubject } from "@aihot/industry/site";
 import { Link, useLoaderData } from "react-router";
 import { apiGet } from "../lib/api.server";
 import { pageMeta } from "../lib/seo";
@@ -18,7 +19,12 @@ export async function loader({ request }: { request: Request }) {
 }
 
 export function meta() {
-  return pageMeta({ title: "主题", description: "按公司与模型、技术方向、内容形态聚合的 AI 主题页：OpenAI、Anthropic、Agent、多模态、论文与教程等 38 个方向。", path: "/topics", image: "/og/pages/topics.png" });
+  return pageMeta({
+    title: "主题",
+    description: `按产业主体、品种赛道与内容形态浏览 ${SITE.name} 的化工主题索引：交易所与资讯机构、原油/聚酯/甲醇等品种，以及现货、研报、装置与地缘等形态。`,
+    path: "/topics",
+    image: "/og/pages/topics.png",
+  });
 }
 
 export function headers() {
@@ -26,9 +32,9 @@ export function headers() {
 }
 
 const GROUPS = [
-  { key: "company", name: "公司与模型", blurb: "按厂商与模型系追踪：谁发了什么、又赢了哪一局" },
-  { key: "field", name: "技术方向", blurb: "按技术领域深挖：Agent、多模态、具身智能……" },
-  { key: "genre", name: "内容形态", blurb: "按内容类型浏览：论文、教程、观点、政策……" },
+  { key: "company", name: "产业主体", blurb: "资讯机构、交易所与能源中心：一手公告与产业研究从哪来" },
+  { key: "field", name: "品种与赛道", blurb: "原油、芳烃、聚酯、甲醇、氯碱、电子化学品……按产品链追踪" },
+  { key: "genre", name: "内容形态", blurb: "现货行情、期货研报、装置供需、地缘与政策等阅读入口" },
 ] as const;
 
 export default function TopicsPage() {
@@ -36,9 +42,9 @@ export default function TopicsPage() {
   return (
     <div className="pb-10">
       <header className="pb-2 pt-5 lg:pt-1">
-        <h1 className="text-[24px] font-semibold leading-[1.3] text-ink">按主题看 AI</h1>
+        <h1 className="text-[24px] font-semibold leading-[1.3] text-ink">按主题看{SITE.subject}</h1>
         <p className="mt-1.5 text-[13px] leading-relaxed text-ink-3">
-          按公司与模型、技术方向、内容形态浏览 <span className="num">{topics.length}</span> 个主题，持续汇集近期焦点与精选。
+          按产业主体、品种赛道与内容形态浏览 <span className="num">{topics.length}</span> 个主题，汇集与{withSubject("产业链")}相关的精选动态。
         </p>
       </header>
       {GROUPS.map((g) => (

@@ -180,7 +180,7 @@ export default function StoryPage() {
   }, [story.timeline, filter, order]);
   const newest = story.timeline.reduce<StoryReportView | null>((a, b) => (!a || Date.parse(b.publishedAt) > Date.parse(a.publishedAt) ? b : a), null);
   const overview = story.digest
-    ? { label: "AI 综述", text: story.digest, note: story.digestUpdatedAt ? `AI 根据报道生成 · ${relativeTime(story.digestUpdatedAt)}更新` : "AI 根据报道生成" }
+    ? { label: "事件综述", text: story.digest, note: story.digestUpdatedAt ? `根据多方报道生成 · ${relativeTime(story.digestUpdatedAt)}更新` : "根据多方报道生成" }
     : story.summary
       ? { label: "事实说明", text: story.summary, note: null }
       : story.excerpt
@@ -315,7 +315,7 @@ export default function StoryPage() {
               onSelect={(k) => setFilter(k as Filter)}
               items={[
                 { key: "all", label: "全部报道", count: counts.all },
-                { key: "official", label: "官方一手", count: counts.official },
+                { key: "official", label: "官方", count: counts.official },
                 { key: "selected", label: "精选报道", count: counts.selected },
               ]}
             />
@@ -385,7 +385,7 @@ export default function StoryPage() {
             </RailCard>
           )}
           {story.officialReports.length > 0 && (
-            <RailCard title="官方一手" right={`${counts.official || story.officialReports.length} 篇`}>
+            <RailCard title="官方" right={`${counts.official || story.officialReports.length} 篇`}>
               <p className="text-[12px] text-ink-4">直接了解当事方的说法</p>
               <ul className="mt-1 divide-y divide-line-soft">
                 {story.officialReports.slice(0, 5).map((r) => (

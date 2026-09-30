@@ -6,6 +6,7 @@ import { isCategoryKey, isChannelKey } from "@aihot/contracts/taxonomy";
 import { loadOr404, queryString } from "../lib/api.server";
 import { listPath, pageMeta } from "../lib/seo";
 import { CategoryTabs, SearchField } from "../features/feed/Filters";
+import { ChainExplorer } from "../features/chain/ChainExplorer";
 import { PillTabs } from "../components/ui/Tabs";
 import { DayList, Pagination } from "../features/feed/DayList";
 import { EmptyState } from "../components/ui/Page";
@@ -20,10 +21,16 @@ export async function loader({ request }: Route.LoaderArgs) {
   const tag = url.searchParams.get("tag")?.trim() || null;
   const q = url.searchParams.get("q")?.trim().slice(0, 200) || null;
   const tab = url.searchParams.get("tab") === "relevance" ? "relevance" : null;
-  // Legacy deep-paging parameters (deep, anchorAt) still open a normal page.
   const page = Math.min(Math.max(Number.parseInt(url.searchParams.get("page") ?? "1", 10) || 1, 1), 50);
   const data = await loadOr404<PoolResponse>(
-    `/api/site/pool${queryString({ channel: channel === "all" ? null : channel, category, tag, q, tab, page: page > 1 ? page : null })}`,
+    `/api/site/pool${queryString({
+      channel: channel === "all" ? null : channel,
+      category,
+      tag,
+      q,
+      tab,
+      page: page > 1 ? page : null,
+    })}`,
     { signal: request.signal, busyRedirect: "/all/search-busy" },
   );
   return { data };
@@ -62,7 +69,11 @@ export default function AllPage() {
   const navigation = useNavigation();
   const f = data.filters;
   const busy = navigation.state === "loading" && navigation.location?.pathname === "/all";
-  const keep = { channel: f.channel === "all" ? null : f.channel, category: f.category };
+  const keep = {
+    channel: f.channel === "all" ? null : f.channel,
+    category: f.category,
+    tag: f.tag,
+  };
   const searchTabHref = (tab: "time" | "relevance") => {
     const sp = new URLSearchParams(params);
     sp.delete("page");
@@ -72,19 +83,20 @@ export default function AllPage() {
   };
   const title = f.q ? `搜索“${f.q}”` : f.tag ? `#${f.tag}` : null;
   const updated = new Date(data.freshness).toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Shanghai" });
+  const showMap = !f.q && f.category !== "macro";
 
   return (
     <div className="pb-6">
-      {/* Desktop, as on 精选: the title, then one filter row with the search field aligned on the right. */}
       <div className="hidden lg:block">
         <h1 className="text-[24px] font-semibold leading-[1.3] text-ink">{title ?? `全部${withSubject("动态")}`}</h1>
-        <div className="mb-5 mt-4 flex items-center justify-between gap-4">
+        <div className="mb-2 mt-4 flex flex-wrap items-center gap-3">
           <CategoryTabs base="/all" category={f.category} channel={f.channel} layoutId="all-cat-desk" className="min-w-0" />
-          <SearchField variant="track" defaultValue={f.q ?? ""} keep={keep} />
+          <div className="ml-auto">
+            <SearchField variant="track" defaultValue={f.q ?? ""} keep={keep} />
+          </div>
         </div>
       </div>
 
-      {/* Phones: title with today's count, the search bar, then the same filter row as 精选. */}
       <div className="lg:hidden">
         <div className="flex items-baseline justify-between pb-3 pt-5">
           <h1 className="text-[22px] font-bold text-ink">{title ?? "全部动态"}</h1>
@@ -95,10 +107,12 @@ export default function AllPage() {
           )}
         </div>
         <SearchField variant="bar" defaultValue={f.q ?? ""} keep={keep} autoFocus={params.get("search") === "1"} />
-        <div className="-mx-4 mt-3 border-b border-line-soft px-4 pb-3">
-          <CategoryTabs base="/all" category={f.category} channel={f.channel} layoutId="all-cat-mobile" size="sm" className="min-w-0" />
+        <div className="-mx-4 mt-3 flex items-center gap-2 border-b border-line-soft px-4 pb-3">
+          <CategoryTabs base="/all" category={f.category} channel={f.channel} layoutId="all-cat-mobile" size="sm" className="min-w-0 flex-1" />
         </div>
       </div>
+
+      {showMap && <ChainExplorer base="/all" category={f.category} tag={f.tag} />}
 
       {f.q && (
         <div className="mb-3 mt-3 flex flex-wrap items-center justify-between gap-2 lg:mt-0">
